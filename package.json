@@ -1,5 +1,5 @@
 {
-  "name": "nti-web-whiteboard",
+  "name": "nti-whiteboard",
   "version": "0.0.0",
   "author": "nextthought",
   "description": "A whiteboard component for ReactJS",
@@ -42,7 +42,7 @@
     "babel-polyfill": "^6.1.0",
     "babel-preset-es2015": "^6.1.0",
     "babel-preset-react": "^6.1.0",
-    "babel-preset-stage-2": "^6.1.0",
+    "babel-preset-stage-1": "^6.1.0",
     "eslint-config-nti-codestyle-js": "^1.1.0",
     "eslint-config-nti-codestyle-jsx": "^1.0.0",
     "in-publish": "^2.0.0",
