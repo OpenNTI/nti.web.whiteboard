@@ -1,5 +1,4 @@
 import React from 'react';
-
 import {Canvas as WhiteboardRenderer} from 'nti-lib-whiteboardjs';
 import {URL} from 'nti-lib-dom';
 import {Constants} from 'nti-web-commons';
