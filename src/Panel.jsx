@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes form 'prop-types';
 import {Canvas as WhiteboardRenderer} from 'nti-lib-whiteboardjs';
 import {URL} from 'nti-lib-dom';
 import {Constants} from 'nti-web-commons';
@@ -6,19 +7,16 @@ import {Constants} from 'nti-web-commons';
 const {DataURIs: {BLANK_IMAGE}} = Constants;
 
 
-export default React.createClass({
-	displayName: 'WhiteboardPanel',
+export default class WhiteboardPanel React.Component {
 
-	propTypes: {
-		scene: React.PropTypes.object.isRequired
-	},
+	static propTypes = {
+		scene: PropTypes.object.isRequired
+	}
 
 
-	getInitialState () {
-		return {
-			src: BLANK_IMAGE
-		};
-	},
+	state = {
+		src: BLANK_IMAGE
+	}
 
 
 	updateRender (scene) {
@@ -30,22 +28,22 @@ export default React.createClass({
 		WhiteboardRenderer.getThumbnail(scene)
 			.then(blob=> URL.createObjectURL(blob))
 			.then(url=> this.setState({src: url}));
-	},
+	}
 
 
 	componentDidMount () {
 		this.updateRender(this.props.scene);
-	},
+	}
 
 
 	componentWillReceiveProps (nextProps) {
 		this.updateRender(nextProps.scene);
-	},
+	}
 
 
 	componentWillUnmount () {
 		URL.revokeObjectURL(this.state.src || '');
-	},
+	}
 
 	render () {
 
@@ -55,4 +53,4 @@ export default React.createClass({
 			</div>
 		);
 	}
-});
+}
