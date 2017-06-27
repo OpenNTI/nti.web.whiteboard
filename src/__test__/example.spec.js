@@ -1,6 +1,7 @@
+/* eslint-env jest */
 describe('Show Tests Working', () => {
 
-	it('Ta da!', () => {
+	test('Ta da!', () => {
 
 		expect(true).toBeTruthy();
 

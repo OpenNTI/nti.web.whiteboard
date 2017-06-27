@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes form 'prop-types';
+import PropTypes from 'prop-types';
 import {Canvas as WhiteboardRenderer} from 'nti-lib-whiteboardjs';
 import {URL} from 'nti-lib-dom';
 import {Constants} from 'nti-web-commons';
@@ -7,7 +7,7 @@ import {Constants} from 'nti-web-commons';
 const {DataURIs: {BLANK_IMAGE}} = Constants;
 
 
-export default class WhiteboardPanel React.Component {
+export default class WhiteboardPanel extends React.Component {
 
 	static propTypes = {
 		scene: PropTypes.object.isRequired
