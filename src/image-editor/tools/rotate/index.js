@@ -1,2 +1,7 @@
-export Button from './Button';
-export format from './format';
+import Button from './Button';
+import format from './format';
+
+export default {
+	Button,
+	format
+};
