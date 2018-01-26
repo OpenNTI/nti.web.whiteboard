@@ -1,7 +1,7 @@
 import Button from './Button';
-import format from './format';
+import draw from './draw';
 
 export default {
 	Button,
-	format
+	draw
 };
