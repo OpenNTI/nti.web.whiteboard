@@ -2,10 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Upload from './Upload';
-import {Crop} from './tools';
+import {Crop, Rotate} from './tools';
 
 const TOOLS = [
-	Crop
+	Crop, Rotate
 ];
 
 export default class ImageEditor extends React.Component {
@@ -32,7 +32,7 @@ export default class ImageEditor extends React.Component {
 
 		this.state = {
 			hasImage: false,
-			currentState: {
+			currentEditorState: {
 				image,
 				formatting: editorState || {}
 			}
@@ -70,7 +70,8 @@ export default class ImageEditor extends React.Component {
 		//Draw the Image
 		const { width, height } = currentImage;
 
-		ctx.drawImage(currentImage, 0, 0, canvas.width, canvas.height);
+		canvas.width = width;
+		canvas.height = height;
 
 		for (let tool of TOOLS) {
 			if (tool.format) {
@@ -81,6 +82,8 @@ export default class ImageEditor extends React.Component {
 		if (activeTool && activeTool.draw) {
 			activeTool.draw(ctx, currentFormatting);
 		}
+
+		ctx.drawImage(currentImage, 0, 0, canvas.width, canvas.height);
 	}
 
 
@@ -93,7 +96,7 @@ export default class ImageEditor extends React.Component {
 
 	setEditorState = (newEditorState) => {
 		this.setState({
-			currentEditorState: { ...newEditorState }
+			currentEditorState: { image: this.currentImage, ...newEditorState }
 		});
 	}
 
@@ -105,12 +108,6 @@ export default class ImageEditor extends React.Component {
 		});
 	}
 
-
-	setActiveControl = (activeControl) => {
-		this.setState({
-			activeControl
-		});
-	}
 
 	callOnActiveControl (name, ...args) {
 		const {activeControl} = this.state;
@@ -155,7 +152,7 @@ export default class ImageEditor extends React.Component {
 
 		return (
 			<div className="tool-bar">
-				{Control && (<Control setEditorState={this.setEditorState} formatting={this.currentFormatting} setActiveControl={this.setActiveControl} />)}
+				{Control && (<Control setEditorState={this.setEditorState} formatting={this.currentFormatting} setActiveControl={this.setActiveControl} image={this.currentImage} onImgChange={this.onImgChange}/>)}
 				{!Control && this.renderButtons()}
 			</div>
 		);
