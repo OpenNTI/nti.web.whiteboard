@@ -20,7 +20,6 @@ export default class ImageEditor extends React.Component {
 
 
 	setCanvas = x => {
-		debugger;
 		this.canvas = x;
 		this.draw();
 	}
@@ -100,7 +99,6 @@ export default class ImageEditor extends React.Component {
 
 
 	onImgChange = (image) => {
-		debugger;
 		this.setEditorState({
 			...this.currentState,
 			image
@@ -117,7 +115,7 @@ export default class ImageEditor extends React.Component {
 	callOnActiveControl (name, ...args) {
 		const {activeControl} = this.state;
 
-		if (activeControl[name]) {
+		if (activeControl && activeControl[name]) {
 			activeControl[name](...args, this.setEditorState, this.currentFormat);
 		}
 	}
