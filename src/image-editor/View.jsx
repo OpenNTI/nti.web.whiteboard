@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Upload from './Upload';
-import {Crop, Rotate, Blur, ChangeImage} from './tools';
+import {Crop} from './tools';
 
 const TOOLS = [
 	Crop
@@ -20,6 +20,7 @@ export default class ImageEditor extends React.Component {
 
 
 	setCanvas = x => {
+		debugger;
 		this.canvas = x;
 		this.draw();
 	}
@@ -44,7 +45,7 @@ export default class ImageEditor extends React.Component {
 	}
 
 	get currentState () {
-		return this.state.currentState || {}
+		return this.state.currentEditorState || {};
 	}
 
 
@@ -59,25 +60,27 @@ export default class ImageEditor extends React.Component {
 
 
 	draw () {
-		const {canvas} = this;
+		if (!this.canvas) { return; }
+
+		const {canvas, currentFormatting, currentImage} = this;
 		const {activeTool} = this.state;
-		const context = canvas.getContext('2d');
+		const ctx = canvas.getContext('2d');
 
 		//clear canvas
 
 		//Draw the Image
-		const { width, height } = img;
+		const { width, height } = currentImage;
 
-		ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+		ctx.drawImage(currentImage, 0, 0, canvas.width, canvas.height);
 
 		for (let tool of TOOLS) {
 			if (tool.format) {
-				tool.format(context, this.currentFormatting);
+				tool.format(ctx, currentFormatting);
 			}
 		}
 
 		if (activeTool && activeTool.draw) {
-			activeTool.draw(context, this.currentFormatting);
+			activeTool.draw(ctx, currentFormatting);
 		}
 	}
 
@@ -97,6 +100,7 @@ export default class ImageEditor extends React.Component {
 
 
 	onImgChange = (image) => {
+		debugger;
 		this.setEditorState({
 			...this.currentState,
 			image
@@ -167,9 +171,11 @@ export default class ImageEditor extends React.Component {
 			<ul>
 				{
 					buttons.map((Button, index) => {
-						<li key={index}>
-							<Button setEditorState={this.setEditorState} formatting={this.currentFormatting} setActiveControl={this.setActiveControl} />
-						</li>
+						return (
+							<li key={index}>
+								<Button setEditorState={this.setEditorState} formatting={this.currentFormatting} setActiveControl={this.setActiveControl} />
+							</li>
+						);
 					})
 				}
 			</ul>
