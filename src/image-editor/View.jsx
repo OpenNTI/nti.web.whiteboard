@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import {getLayoutFor} from './utils';
 import Upload from './Upload';
 import {Crop, Rotate} from './tools';
 
@@ -8,19 +9,19 @@ const TOOLS = [
 	Crop, Rotate
 ];
 
+const CANVAS_PADDING = 2;
+
 export default class ImageEditor extends React.Component {
 	static propTypes = {
 		image: PropTypes.any,
-		editorState: PropTypes.object
+		formatting: PropTypes.object
 	}
 
-	attachImgRef = x => this.imgRef = x
-	attachFileRef = x => this.fileInput = x
-
-
+	setContainer = x => this.container = x
 
 	setCanvas = x => {
 		this.canvas = x;
+
 		this.draw();
 	}
 
@@ -28,13 +29,12 @@ export default class ImageEditor extends React.Component {
 	constructor (props) {
 		super(props);
 
-		const {editorState, image} = this.props;
+		const {formatting, image} = this.props;
 
 		this.state = {
-			hasImage: false,
 			currentEditorState: {
 				image,
-				formatting: editorState || {}
+				formatting: formatting || {}
 			}
 		};
 	}
@@ -48,8 +48,8 @@ export default class ImageEditor extends React.Component {
 	}
 
 
-	get currentImage () {
-		return this.currentState.image;
+	get currentLayout () {
+		return this.currentState.layout;
 	}
 
 
@@ -58,32 +58,50 @@ export default class ImageEditor extends React.Component {
 	}
 
 
+	get size () {
+		return {
+			width: this.container ? this.container.clientWidth : null,
+			height: this.container ? this.container.clientHeight : null
+		};
+	}
+
+
 	draw () {
 		if (!this.canvas) { return; }
 
-		const {canvas, currentFormatting, currentImage} = this;
+		const {canvas, currentFormatting: formatting, currentLayout: layout} = this;
 		const {activeTool} = this.state;
 		const ctx = canvas.getContext('2d');
 
-		//clear canvas
+		//reset the canvas
+		canvas.width = layout.canvas.width;
+		canvas.height = layout.canvas.height;
 
-		//Draw the Image
-		const { width, height } = currentImage;
+		ctx.setTransform(1, 0, 0, 1, 0, 0);
+		ctx.lineWidth = 1;
 
-		canvas.width = width;
-		canvas.height = height;
+		//do an drawing before the image
+		for (let tool of TOOLS) {
+			if (tool.draw && tool.draw.before) {
+				tool.draw.before(ctx, formatting, layout);
+			}
+		}
+
+		ctx.save();
+		ctx.globalCompositeOperation = 'destination-over';
+		ctx.drawImage(layout.image.src, layout.image.x, layout.image.y, layout.image.width, layout.image.height);
+		ctx.restore();
+
 
 		for (let tool of TOOLS) {
-			if (tool.format) {
-				tool.format(ctx, currentFormatting);
+			if (tool.draw && tool.draw.after) {
+				tool.draw.after(ctx, formatting, layout);
 			}
 		}
 
 		if (activeTool && activeTool.draw) {
-			activeTool.draw(ctx, currentFormatting);
+			activeTool.draw(ctx, formatting, layout);
 		}
-
-		ctx.drawImage(currentImage, 0, 0, canvas.width, canvas.height);
 	}
 
 
@@ -102,45 +120,63 @@ export default class ImageEditor extends React.Component {
 
 
 	onImgChange = (image) => {
+		const layout = getLayoutFor(image, this.size, CANVAS_PADDING);
+
 		this.setEditorState({
 			...this.currentState,
-			image
+			layout
 		});
 	}
 
+	setActiveControl = (activeControl) => {
+		this.setState({
+			activeControl
+		});
+	}
 
-	callOnActiveControl (name, ...args) {
+	onMouseEvent (name, ...args) {
 		const {activeControl} = this.state;
 
 		if (activeControl && activeControl[name]) {
-			activeControl[name](...args, this.setEditorState, this.currentFormat);
+			activeControl[name](...args, this.canvas, this.setEditorState, this.currentFormat);
+		}
+
+		for (let tool of TOOLS) {
+			if (tool[name]) {
+				tool[name](...args, this.canvas, this.setEditorState, this.currentFormat);
+			}
 		}
 	}
 
 
-	onMouseDown = (e) => this.callOnActiveControl('onMouseDown', e)
-	onMouseUp = (e) => this.callOnActiveControl('onMouseUp', e)
-	onMouseMove = (e) => this.callOnActiveControl('onMouseMove', e)
-	onMouseOut = (e) => this.callOnActiveControl('onMouseOut', e)
+	onMouseDown = (e) => this.onMouseEvent('onMouseDown', e)
+	onMouseUp = (e) => this.onMouseEvent('onMouseUp', e)
+	onMouseMove = (e) => this.onMouseEvent('onMouseMove', e)
+	onMouseOut = (e) => this.onMouseEvent('onMouseOut', e)
 
 
 	render () {
-		const {currentState} = this.state;
+		const layout = this.currentLayout;
 
-		if(!this.currentImage) {
-			return <Upload onChange={this.onImgChange}/>;
-		}
+		const containerStyles = layout ? { height: `${layout.canvas.height}px`, width: `${layout.canvas.width}px` } : {};
 
 		return (
-			<div className="nti-image-editor">
-				<canvas
-					ref={this.setCanvas}
-					onMouseDown={this.onMouseDown}
-					onMouseUp={this.onMouseUp}
-					onMouseMove={this.onMouseMove}
-					onMouseOut={this.onMouseOut}
-				/>
-				{this.renderToolbar()}
+			<div className="nti-image-editor" ref={this.setContainer}>
+				{!layout && (<Upload onChange={this.onImgChange}/>)}
+				{layout && (
+					<div className="canvas-container" style={containerStyles}>
+						<canvas
+							onMouseDown={this.onMouseDown}
+							ref={this.setCanvas}
+							onMouseUp={this.onMouseUp}
+							onMouseMove={this.onMouseMove}
+							onMouseOut={this.onMouseOut}
+							width={5}
+							height={3}
+						/>
+					</div>
+				)}
+				{layout && this.renderToolbar()}
 			</div>
 		);
 	}

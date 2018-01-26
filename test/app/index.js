@@ -12,6 +12,14 @@ import 'nti-web-commons/lib/index.css';
 // 	React.createElement(Whiteboard, {}),
 // 	document.getElementById('content')
 // );
+
+const formatting = {
+	crop: {
+		width: 200,
+		height: 100
+	}
+};
+
 class Test extends React.Component {
 	componentDidMount () {
 
@@ -22,7 +30,7 @@ class Test extends React.Component {
 	}
 
 	onClick = () => {
-		Prompt.modal(<ImageEditor/>);
+		Prompt.modal(<ImageEditor formatting={formatting}/>);
 	}
 
 	render () {
