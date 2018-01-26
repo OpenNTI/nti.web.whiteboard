@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {Loading, Input} from 'nti-web-commons';
 
-import {getImgSrc, drawFromImg} from './utils';
+import {getImgSrc} from './utils';
 
 export default class Upload extends React.Component {
 	static propTypes = {
@@ -13,10 +13,6 @@ export default class Upload extends React.Component {
 	attachFileRef = x => this.fileInput = x
 
 	state = { loading: false }
-
-	onImgLoad = () => {
-		drawFromImg(this.canvas, this.imgRef);
-	}
 
 	uploadAssets = (file) => {
 		const { onChange } = this.props;

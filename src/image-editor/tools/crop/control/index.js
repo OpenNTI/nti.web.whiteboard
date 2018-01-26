@@ -7,4 +7,4 @@ export default {
 	Component,
 	draw,
 	...handlers
-}
+};
