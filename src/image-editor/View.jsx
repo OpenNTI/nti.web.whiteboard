@@ -105,6 +105,19 @@ export default class ImageEditor extends React.Component {
 	}
 
 
+	fixFormatting (formatting, layout) {
+		let newFormat = {...formatting};
+
+		for (let tool of TOOLS) {
+			if (tool.fixFormatting) {
+				newFormat = tool.fixFormatting(newFormat, layout);
+			}
+		}
+
+		return newFormat;
+	}
+
+
 	setActiveControl = (activeControl) => {
 		this.setState({
 			activeControl
@@ -123,7 +136,7 @@ export default class ImageEditor extends React.Component {
 		const layout = getLayoutFor(image, this.size, CANVAS_PADDING);
 
 		this.setEditorState({
-			...this.currentState,
+			formatting: this.fixFormatting(this.currentFormatting, layout),
 			layout
 		});
 	}
