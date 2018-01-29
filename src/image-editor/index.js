@@ -1,1 +1,2 @@
-export default from './View';
+export Display from './Display';
+export Editor from './Editor';
