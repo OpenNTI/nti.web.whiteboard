@@ -24,11 +24,15 @@ function isInCrop (point, crop) {
 	);
 }
 
-function isWithInDistance (a, b, distance) {
+function getDistance (a, b) {
 	const diffX = a[0] - b[0];
 	const diffY = a[1] - b[1];
 
-	const dist = Math.sqrt((diffX * diffX) + (diffY * diffY));
+	return Math.sqrt((diffX * diffX) + (diffY * diffY));
+}
+
+function isWithInDistance (a, b, distance) {
+	const dist = getDistance(a, b);
 
 	return dist <= distance;
 }
@@ -84,9 +88,21 @@ function fitWidthToRatio (size, ratio, minSize, maxSize) {
 }
 
 function fitSizeToRatio (size, ratio, minSize, maxSize) {
-	return size.width < size.height ?
-		fitHeightToRatio(size, ratio, minSize, maxSize) :
-		fitWidthToRatio(size, ratio, minSize, maxSize);
+	//if the size already fits the ratio don't do anything
+	if (size.width / size.height === ratio) { return size; }
+
+	const desiredLength = getDistance([0, 0], [size.width, size.height]);
+
+	const fixedForHeight = fitHeightToRatio(size, ratio, minSize, maxSize);
+	const fixedForWidth = fitWidthToRatio(size, ratio, minSize, maxSize);
+
+	const heightDistance = getDistance([0, 0], [fixedForHeight.width, fixedForHeight.height]);
+	const widthDistance = getDistance([0, 0], [fixedForWidth.width, fixedForWidth.height]);
+
+	const heightDiff = Math.abs(desiredLength - heightDistance);
+	const widthDiff = Math.abs(desiredLength - widthDistance);
+
+	return heightDiff > widthDiff ? fixedForWidth : fixedForHeight;
 }
 
 function getSizeFromPointToAnchor (point, anchor, minSize, maxSize, aspectRatio) {
