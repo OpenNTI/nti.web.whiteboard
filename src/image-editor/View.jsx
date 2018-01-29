@@ -9,7 +9,7 @@ const TOOLS = [
 	Crop, Rotate
 ];
 
-const CANVAS_PADDING = 2;
+const CANVAS_PADDING = 7;
 
 export default class ImageEditor extends React.Component {
 	static propTypes = {
@@ -154,12 +154,12 @@ export default class ImageEditor extends React.Component {
 		const {activeControl} = this.state;
 
 		if (activeControl && activeControl[name]) {
-			activeControl[name](...args, this.canvas, this.currentFormatting, this.setEditorState);
+			activeControl[name](...args, this.canvas, this.currentFormatting, this.currentLayout, this.setEditorState);
 		}
 
 		for (let tool of TOOLS) {
 			if (tool[name]) {
-				tool[name](...args, this.canvas, this.currentFormatting, this.setEditorState);
+				tool[name](...args, this.canvas, this.currentFormatting, this.currentLayout, this.setEditorState);
 			}
 		}
 	}
