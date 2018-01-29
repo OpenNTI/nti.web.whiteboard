@@ -1,3 +1,5 @@
+import {CORNER_RADIUS} from './Constants';
+
 export default {
 	before (ctx, formatting, layout) {
 		const {crop} = formatting || {};
@@ -38,7 +40,7 @@ export default {
 		function nib (x, y, noStroke) {
 			ctx.beginPath();
 
-			ctx.arc(x, y, 7, 0, Math.PI * 2);
+			ctx.arc(x, y, CORNER_RADIUS, 0, Math.PI * 2);
 			// ctx.endPath();
 			ctx.fill();
 			if (!noStroke) { ctx.stroke(); }
