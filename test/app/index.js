@@ -16,7 +16,8 @@ import 'nti-web-commons/lib/index.css';
 const formatting = {
 	crop: {
 		width: 200,
-		height: 100
+		height: 300,
+		aspectRatio: 2 / 3
 	}
 };
 

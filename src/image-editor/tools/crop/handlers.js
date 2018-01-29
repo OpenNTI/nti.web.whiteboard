@@ -57,23 +57,50 @@ function isInSWCorner (point, crop) {
 	return isWithInDistance(point, corner, CORNER_RADIUS);
 }
 
-function getSizeFromPointToAnchor (point, anchor, minSize, maxSize) {
+function fitHeightToRatio (size, ratio, minSize, maxSize) {
+	const getHeight = width => Math.ceil(width / ratio);
+
+	let fixedSize = {width: size.width, height: getHeight(size.width)};
+
+	while (fixedSize.height > maxSize.heigth) {
+		fixedSize.width -= 1;
+		fixedSize.height = getHeight(fixedSize.width);
+	}
+
+	return fixedSize;
+}
+
+function fitWidthToRatio (size, ratio, minSize, maxSize) {
+	const getWidth = height => Math.ceil(height * ratio);
+
+	let fixedSize = {width: getWidth(size.height), height: size.height};
+
+	while (fixedSize.width > maxSize.width) {
+		fixedSize.height -= 1;
+		fixedSize.width = getWidth(fixedSize.height);
+	}
+
+	return fixedSize;
+}
+
+function fitSizeToRatio (size, ratio, minSize, maxSize) {
+	return size.width < size.height ?
+		fitHeightToRatio(size, ratio, minSize, maxSize) :
+		fitWidthToRatio(size, ratio, minSize, maxSize);
+}
+
+function getSizeFromPointToAnchor (point, anchor, minSize, maxSize, aspectRatio) {
 	const diffX = Math.abs(point[0] - anchor[0]);
 	const diffY = Math.abs(point[1] - anchor[1]);
 
 	const clamp = (d, min, max) => Math.min(Math.max(d, min), max);
 
-	if (minSize && maxSize) {
-		return {
-			width: clamp(diffX, minSize.width, maxSize.width),
-			height: clamp(diffY, minSize.height, maxSize.height)
-		};
-	}
-
-	return {
-		width: diffX,
-		height: diffY
+	const size = {
+		width: clamp(diffX, minSize.width, maxSize.width),
+		height: clamp(diffY, minSize.height, maxSize.height)
 	};
+
+	return aspectRatio ? fitSizeToRatio(size, aspectRatio, minSize, maxSize) : size;
 }
 
 
@@ -156,7 +183,7 @@ const ACTIONS = {
 
 		const {minSize, maxSize} = getSizingConstraints(crop, layout);
 
-		const newSize = getSizeFromPointToAnchor(point, anchorPoint, minSize, maxSize);
+		const newSize = getSizeFromPointToAnchor(point, anchorPoint, minSize, maxSize, crop.aspectRatio);
 		const newOrigin = [anchorPoint[0] - newSize.width, anchorPoint[1] - newSize.height];
 
 		//If we've dragged pass the anchor don't start getting bigger
@@ -194,7 +221,7 @@ const ACTIONS = {
 
 		const {minSize, maxSize} = getSizingConstraints(crop, layout);
 
-		const newSize = getSizeFromPointToAnchor(point, anchorPoint, minSize, maxSize);
+		const newSize = getSizeFromPointToAnchor(point, anchorPoint, minSize, maxSize, crop.aspectRatio);
 		const newOrigin = [anchorPoint[0], anchorPoint[1]];
 
 		if (point[0] < anchorPoint[0]) {
@@ -229,7 +256,7 @@ const ACTIONS = {
 
 		const {minSize, maxSize} = getSizingConstraints(crop, layout);
 
-		const newSize = getSizeFromPointToAnchor(point, anchorPoint, minSize, maxSize);
+		const newSize = getSizeFromPointToAnchor(point, anchorPoint, minSize, maxSize, crop.aspectRatio);
 		const newOrigin = [anchorPoint[0], anchorPoint[1] - newSize.height];
 
 		if (point[0] < anchorPoint[0]) {
@@ -265,7 +292,7 @@ const ACTIONS = {
 
 		const {minSize, maxSize} = getSizingConstraints(crop, layout);
 
-		const newSize = getSizeFromPointToAnchor(point, anchorPoint, minSize, maxSize);
+		const newSize = getSizeFromPointToAnchor(point, anchorPoint, minSize, maxSize, crop.aspectRatio);
 		const newOrigin = [anchorPoint[0] - newSize.width, anchorPoint[1]];
 
 		if (point[0] > anchorPoint[0]) {
