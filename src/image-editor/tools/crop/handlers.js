@@ -9,6 +9,12 @@ function getRelativePoint (point, canvas) {
 	];
 }
 
+function getPointForEvent (e, canvas) {
+	const {clientX:eventX, clientY:eventY} = e;
+
+	return getRelativePoint([eventX, eventY], canvas);
+}
+
 function isInCrop (point, crop) {
 	return (
 		point[0] >= crop.x &&
@@ -52,15 +58,62 @@ function isInSWCorner (point, crop) {
 }
 
 
+const ACTIONS = {
+	move (point, crop, action, formatting, layout, setEditorState) {
+		const {lastPoint} = action;
+		const xDiff = point[0] - lastPoint[0];
+		const yDiff = point[1] - lastPoint[1];
+
+		let newX = crop.x + xDiff;
+
+		if (newX < layout.canvas.padding) {
+			newX = layout.canvas.padding;
+		}
+
+		if (newX + crop.width > layout.canvas.width - layout.canvas.padding) {
+			newX = layout.canvas.width - layout.canvas.padding - crop.width;
+		}
+
+		let newY = crop.y + yDiff;
+
+		if (newY < layout.canvas.padding) {
+			newY = layout.canvas.padding;
+		}
+
+		if (newY + crop.height > layout.canvas.height - layout.canvas.padding) {
+			newY = layout.canvas.height - layout.canvas.padding - crop.height;
+		}
+
+		setEditorState({
+			formatting: {
+				...formatting,
+				crop: {
+					...crop,
+					x: newX,
+					y: newY,
+					action: {
+						name: 'move',
+						lastPoint: point
+					}
+				}
+			}
+		});
+	}
+};
+
+
 
 export default {
-	onMouseMove (e, canvas, formatting, setEditorState) {
+	onMouseMove (e, canvas, formatting, layout, setEditorState) {
 		const {crop} = formatting;
 
 		if (!crop) { return; }
 
-		const {clientX:eventX, clientY:eventY} = e;
-		const point = getRelativePoint([eventX, eventY], canvas);
+		const point = getPointForEvent(e, canvas);
+
+		if (crop.action && ACTIONS[crop.action.name]) {
+			return ACTIONS[crop.action.name](point, crop, crop.action, formatting, layout, setEditorState);
+		}
 
 		if (isInNWCorner(point, crop) || isInSECorner(point, crop)) {
 			setEditorState({cursor: 'nwse-resize'});
@@ -70,6 +123,68 @@ export default {
 			setEditorState({cursor: 'move'});
 		} else {
 			setEditorState({cursor: null});
+		}
+	},
+
+
+	onMouseDown (e, canvas, formatting, layout, setEditorState) {
+		const {crop} = formatting;
+
+		if (!crop) { return; }
+
+		const point = getPointForEvent(e, canvas);
+
+		if (isInCrop(point, crop)) {
+			setEditorState({
+				formatting: {
+					...formatting,
+					crop: {
+						...crop,
+						action: {
+							name: 'move',
+							lastPoint: point
+						}
+					}
+				}
+			});
+		}
+	},
+
+
+	onMouseUp (e, canvas, formatting, layout, setEditorState) {
+		const {crop} = formatting;
+
+		if (!crop) { return; }
+
+		if (crop.action) {
+			setEditorState({
+				formatting: {
+					...formatting,
+					crop: {
+						...crop,
+						action: null
+					}
+				}
+			});
+		}
+	},
+
+
+	onMouseOut (e, canvas, formatting, layout, setEditorState) {
+		const {crop} = formatting;
+
+		if (!crop) { return; }
+
+		if (crop.action) {
+			setEditorState({
+				formatting: {
+					...formatting,
+					crop: {
+						...crop,
+						action: null
+					}
+				}
+			});
 		}
 	}
 };
