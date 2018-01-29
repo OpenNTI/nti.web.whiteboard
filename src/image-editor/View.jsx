@@ -9,7 +9,7 @@ const TOOLS = [
 	Crop, Rotate
 ];
 
-const CANVAS_PADDING = 7;
+const CANVAS_PADDING = 20;
 
 export default class ImageEditor extends React.Component {
 	static propTypes = {
