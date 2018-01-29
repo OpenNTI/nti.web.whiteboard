@@ -127,7 +127,10 @@ export default class ImageEditor extends React.Component {
 
 	setEditorState = (newEditorState) => {
 		this.setState({
-			currentEditorState: { image: this.currentImage, ...newEditorState }
+			currentEditorState: {
+				...this.currentState,
+				...newEditorState
+			}
 		});
 	}
 
@@ -151,12 +154,12 @@ export default class ImageEditor extends React.Component {
 		const {activeControl} = this.state;
 
 		if (activeControl && activeControl[name]) {
-			activeControl[name](...args, this.canvas, this.setEditorState, this.currentFormat);
+			activeControl[name](...args, this.canvas, this.currentFormatting, this.setEditorState);
 		}
 
 		for (let tool of TOOLS) {
 			if (tool[name]) {
-				tool[name](...args, this.canvas, this.setEditorState, this.currentFormat);
+				tool[name](...args, this.canvas, this.currentFormatting, this.setEditorState);
 			}
 		}
 	}
@@ -169,15 +172,23 @@ export default class ImageEditor extends React.Component {
 
 
 	render () {
+		const {cursor} = this.currentState;
 		const layout = this.currentLayout;
 
-		const containerStyles = layout ? { height: `${layout.canvas.height}px`, width: `${layout.canvas.width}px` } : {};
+		const styles = {
+			cursor: cursor || 'default'
+		};
+
+		if (layout) {
+			styles.height = `${layout.canvas.height}px`;
+			styles.width = `${layout.canvas.width}px`;
+		}
 
 		return (
 			<div className="nti-image-editor" ref={this.setContainer}>
 				{!layout && (<Upload onChange={this.onImgChange}/>)}
 				{layout && (
-					<div className="canvas-container" style={containerStyles}>
+					<div className="canvas-container" style={styles}>
 						<canvas
 							onMouseDown={this.onMouseDown}
 							ref={this.setCanvas}
