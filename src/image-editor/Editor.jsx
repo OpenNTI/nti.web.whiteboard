@@ -11,10 +11,12 @@ const TOOLS = [
 
 const CANVAS_PADDING = 20;
 
+
 export default class ImageEditor extends React.Component {
 	static propTypes = {
 		image: PropTypes.any,
-		formatting: PropTypes.object
+		formatting: PropTypes.object,
+		onChange: PropTypes.func
 	}
 
 	setContainer = x => this.container = x
@@ -39,8 +41,15 @@ export default class ImageEditor extends React.Component {
 		};
 	}
 
-	componentDidUpdate () {
+	componentDidUpdate (prevProps, prevState) {
 		this.draw();
+
+		const {currentEditorState:oldState} = prevState;
+		const {currentEditorState:newState} = this.state;
+
+		if (oldState && newState && (oldState.formatting !== newState.formatting || oldState.currentLayout !== newState.currentLayout)) {
+			this.onChange();
+		}
 	}
 
 	get currentState () {
@@ -63,6 +72,15 @@ export default class ImageEditor extends React.Component {
 			width: this.container ? this.container.clientWidth : null,
 			height: this.container ? this.container.clientHeight : null
 		};
+	}
+
+
+	onChange () {
+		const {onChange} = this.props;
+
+		if (onChange) {
+			onChange(this.currentState);
+		}
 	}
 
 

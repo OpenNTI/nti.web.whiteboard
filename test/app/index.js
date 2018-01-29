@@ -1,9 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Prompt} from 'nti-web-commons';
 
 // import Whiteboard from '../../src/index';
-import ImageEditor from '../../src/image-editor';
+import {Editor, Display} from '../../src/image-editor';
 
 import 'nti-style-common/all.scss';
 import 'nti-web-commons/lib/index.css';
@@ -22,20 +21,30 @@ const formatting = {
 };
 
 class Test extends React.Component {
-	componentDidMount () {
+	state = {}
 
-	}
-
-	constructor (props) {
-		super(props);
-	}
-
-	onClick = () => {
-		Prompt.modal(<ImageEditor formatting={formatting}/>);
+	onChange = (editorState) => {
+		debugger;
+		this.setState({
+			editorState
+		});
 	}
 
 	render () {
-		return (<div className="launch" onClick={this.onClick}>Launch</div>);
+		const {editorState} = this.state;
+
+		return (
+			<div>
+				<div>
+					<h1>Editor</h1>
+					<Editor formatting={formatting} onChange={this.onChange}/>
+				</div>
+				<div>
+					<h1>Display</h1>
+					{editorState && (<Display editorState={editorState} />)}
+				</div>
+			</div>
+		);
 	}
 }
 
