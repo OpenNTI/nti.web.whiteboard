@@ -1,6 +1,8 @@
+import fixFormatting from './fix-formatting';
+
 export default {
 	fixLayout (formatting, layout) {
-		const {crop} = formatting;
+		const {crop} = fixFormatting(formatting, layout);
 
 		if (!crop) {
 			return {
@@ -29,8 +31,8 @@ export default {
 			},
 			canvas: {
 				padding: 0,
-				width: crop.width,
-				height: crop.height
+				width: Math.min(crop.width, layout.image.width),
+				height: Math.min(crop.height, layout.image.height)
 			}
 		};
 	}
