@@ -1,30 +1,46 @@
-import handlers from './handlers';
-
 export default function fixCropFormatting (formatting, layout) {
 	const {crop} = formatting;
 
 	if (!crop) { return formatting; }
 
-	if (!crop.width || !crop.height) {
-		return handlers.initial(formatting, layout);
+	let {aspectRatio, width, height, x = layout.canvas.padding, y = layout.canvas.padding} = crop;
+
+
+	function getHeight (w, fallback) {
+		return aspectRatio ? Math.ceil(w / aspectRatio) : fallback;
 	}
 
-	if (crop.width > layout.canvas.width - (layout.canvas.padding * 2)) {
-		crop.width = layout.canvas.width - (layout.canvas.padding * 2);
+	function getWidth (h, fallback) {
+		return aspectRatio ? Math.ceil(h * aspectRatio) : fallback;
 	}
 
-	if (crop.height > layout.canvas.height - (layout.canvas.padding * 2)) {
-		crop.height = layout.canvas.height - (layout.canvas.padding * 2);
+	if (!width && !height) {
+		width = layout.image.width;
 	}
 
+	if (width && !height) {
+		height = getHeight(width, height);
+	} else if (height) {
+		width = getWidth(height, width);
+	}
 
-	if (!crop.x || !crop.y) {
-		crop.x = layout.image.x + (layout.image.width / 2) - (crop.width / 2);
-		crop.y = layout.image.y + (layout.image.height / 2) - (crop.height / 2);
+	if (x + width > layout.image.width) {
+		width = layout.image.width - x;
+		height = getHeight(width, height);
+	}
+
+	if (y + height > layout.image.height) {
+		height = layout.image.height - y;
+		width = getWidth(height, width);
 	}
 
 	return {
 		...formatting,
-		crop: {...crop}
+		crop: {
+			x, y,
+			width,
+			height,
+			aspectRatio
+		}
 	};
 }

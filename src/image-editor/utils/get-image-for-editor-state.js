@@ -6,9 +6,21 @@ export default function getImageForEditorState (editorState) {
 	const canvas = document.createElement('canvas');
 	const ctx = canvas.getContext('2d');
 
-	const {layout, formatting} = editorState;
+	const {layout, formatting, image} = editorState;
 
-	let outputLayout = layout;
+	let outputLayout = layout || {
+		image: {
+			src: image,
+			x: 0, y: 0,
+			width: image.width,
+			height: image.height
+		},
+		canvas: {
+			padding: 0,
+			width: image.width,
+			height: image.height
+		}
+	};
 
 	for (let tool of TOOLS) {
 		if (tool.output && tool.output.fixLayout) {
