@@ -342,6 +342,31 @@ const ACTIONS = {
 
 
 export default {
+	initial (formatting, layout) {
+		const {crop} = formatting;
+
+		if (!crop) { return formatting; }
+
+		const {minSize, maxSize} = getSizingConstraints(crop, layout);
+
+		const anchorPoint = crop.x != null && crop.y != null ? [crop.x, crop.y] : [0, 0];
+		const focusPoint = [layout.canvas.width, layout.canvas.height];
+
+		const newSize = getSizeFromPointToAnchor(focusPoint, anchorPoint, minSize, maxSize, crop.aspectRatio);
+
+		const newCrop = constrainCrop({
+			width: newSize.width,
+			height: newSize.height,
+			x: crop.x != null ? crop.x : (layout.canvas.width / 2) - (newSize.width / 2),
+			y: crop.y != null ? crop.y : (layout.canvas.height / 2)  - (newSize.height / 2)
+		}, layout);
+
+		return {
+			...formatting,
+			crop: newCrop
+		};
+	},
+
 	onMouseMove (e, canvas, formatting, layout, setEditorState) {
 		const {crop} = formatting;
 

@@ -1,11 +1,11 @@
 import draw from './draw';
 import fixFormatting from './fix-formatting';
-import fixLayoutForOutput from './fix-layout-for-outpout';
 import handlers from './handlers';
+import output from './output';
 
 export default {
 	draw,
 	fixFormatting,
-	fixLayoutForOutput,
+	output,
 	...handlers
 };

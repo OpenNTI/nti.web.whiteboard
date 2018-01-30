@@ -1,0 +1,37 @@
+export default {
+	fixLayout (formatting, layout) {
+		const {crop} = formatting;
+
+		if (!crop) {
+			return {
+				image: {
+					src: layout.image.src,
+					x: 0,
+					y: 0,
+					width: layout.image.width,
+					height: layout.image.height
+				},
+				canvas: {
+					padding: 0,
+					width: layout.image.width,
+					height: layout.image.height
+				}
+			};
+		}
+
+		return {
+			image: {
+				src: layout.image.src,
+				x: -crop.x,
+				y: -crop.y,
+				width: layout.image.width,
+				height: layout.image.height
+			},
+			canvas: {
+				padding: 0,
+				width: crop.width,
+				height: crop.height
+			}
+		};
+	}
+};
