@@ -1,3 +1,6 @@
+export getEditorState from './get-editor-state';
+export getImageForEditorState from './get-image-for-editor-state';
+
 export function getImgSrc (file) {
 	return new Promise(function (fulfill, reject) {
 		if(file && file.name) {

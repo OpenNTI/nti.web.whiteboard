@@ -1,9 +1,21 @@
+import handlers from './handlers';
+
 export default function fixCropFormatting (formatting, layout) {
 	const {crop} = formatting;
 
 	if (!crop) { return formatting; }
 
-	//TODO: account for more incorrect crops
+	if (!crop.width || !crop.height) {
+		return handlers.initial(formatting, layout);
+	}
+
+	if (crop.width > layout.canvas.width - (layout.canvas.padding * 2)) {
+		crop.width = layout.canvas.width - (layout.canvas.padding * 2);
+	}
+
+	if (crop.height > layout.canvas.height - (layout.canvas.padding * 2)) {
+		crop.height = layout.canvas.height - (layout.canvas.padding * 2);
+	}
 
 
 	if (!crop.x || !crop.y) {

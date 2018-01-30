@@ -11,11 +11,9 @@ const TOOLS = [
 
 const CANVAS_PADDING = 20;
 
-
 export default class ImageEditor extends React.Component {
 	static propTypes = {
-		image: PropTypes.any,
-		formatting: PropTypes.object,
+		editorState: PropTypes.object,
 		onChange: PropTypes.func
 	}
 
@@ -31,15 +29,23 @@ export default class ImageEditor extends React.Component {
 	constructor (props) {
 		super(props);
 
-		const {formatting, image} = this.props;
+		const {editorState} = this.props;
 
 		this.state = {
-			currentEditorState: {
-				image,
-				formatting: formatting || {}
-			}
+			initialState: editorState || {},
+			currentEditorState: {}
 		};
 	}
+
+	componentDidMount () {
+		const {initialState} = this.state;
+
+
+		if (initialState) {
+			this.setupInitialState(initialState);
+		}
+	}
+
 
 	componentDidUpdate (prevProps, prevState) {
 		this.draw();
@@ -136,6 +142,25 @@ export default class ImageEditor extends React.Component {
 	}
 
 
+	setupInitialState (initialState) {
+		const {image, formatting} = initialState;
+
+		if (image) {
+			const layout = getLayoutFor(image, this.size, CANVAS_PADDING);
+
+			this.setEditorState({
+				image,
+				formatting: this.fixFormatting(formatting || {}, layout),
+				layout
+			});
+		} else if (formatting) {
+			this.setEditorState({
+				formatting
+			});
+		}
+	}
+
+
 	setActiveControl = (activeControl) => {
 		this.setState({
 			activeControl
@@ -157,6 +182,7 @@ export default class ImageEditor extends React.Component {
 		const layout = getLayoutFor(image, this.size, CANVAS_PADDING);
 
 		this.setEditorState({
+			image,
 			formatting: this.fixFormatting(this.currentFormatting, layout),
 			layout
 		});
