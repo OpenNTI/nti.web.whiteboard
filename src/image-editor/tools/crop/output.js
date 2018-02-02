@@ -31,8 +31,24 @@ export default {
 			},
 			canvas: {
 				padding: 0,
-				width: Math.min(crop.width, layout.image.width),
-				height: Math.min(crop.height, layout.image.height)
+				width: crop.width,
+				height: crop.height
+			}
+		};
+	},
+
+
+	fixFormatting (formatting, layout) {
+		const {crop} = formatting;
+
+		if (!crop) { return formatting; }
+
+		return {
+			...formatting,
+			crop: {
+				...crop,
+				x: -crop.x,
+				y: -crop.y
 			}
 		};
 	}

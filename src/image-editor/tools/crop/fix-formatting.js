@@ -3,7 +3,7 @@ export default function fixCropFormatting (formatting, layout) {
 
 	if (!crop) { return formatting; }
 
-	let {aspectRatio, width, height, x = layout.canvas.padding, y = layout.canvas.padding} = crop;
+	let {aspectRatio, width, height, x = 0, y = 0} = crop;
 
 
 	function getHeight (w, fallback) {
