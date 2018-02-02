@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 
 import {getLayoutFor} from './utils';
 import Upload from './Upload';
-import {Crop, Rotate} from './tools';
+import {Crop, Rotate, Blur} from './tools';
 
 const TOOLS = [
-	Crop, Rotate
+	Crop, Rotate, Blur
 ];
 
 const CANVAS_PADDING = 20;
@@ -18,10 +18,6 @@ function getMouseEvent (e, canvas) {
 		clientX: e.clientX - rect.left - CANVAS_PADDING,
 		clientY: e.clientY - rect.top - CANVAS_PADDING
 	};
-	// return {
-	// 	clientX: e.clientX - CANVAS_PADDING,
-	// 	clientY: e.clientY - CANVAS_PADDING
-	// };
 }
 
 export default class ImageEditor extends React.Component {

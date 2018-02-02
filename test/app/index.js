@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 // import Whiteboard from '../../src/index';
-import {Editor, Display, getImageForEditorState} from '../../src/image-editor';
+import {Editor, getImageForEditorState} from '../../src/image-editor';
 
 import 'nti-style-common/all.scss';
 import 'nti-web-commons/lib/index.css';
@@ -16,6 +16,9 @@ const formatting = {
 	crop: {
 		width: 200,
 		height: 300
+	},
+	blur: {
+		radius: 100
 	}
 };
 
