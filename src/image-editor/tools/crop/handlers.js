@@ -120,22 +120,22 @@ function getSizingConstraints (crop, layout) {
 }
 
 function constrainCrop (crop, layout) {
-	if (crop.x < layout.canvas.padding) {
-		crop.width = crop.width - (layout.canvas.padding - crop.x);
-		crop.x = layout.canvas.padding;
+	if (crop.x < 0) {
+		crop.width = crop.width - crop.x;
+		crop.x = 0;
 	}
 
-	if (crop.y < layout.canvas.padding) {
-		crop.height = crop.height - (layout.canvas.padding - crop.y);
-		crop.y = layout.canvas.padding;
+	if (crop.y < 0) {
+		crop.height = crop.height - crop.y;
+		crop.y = 0;
 	}
 
-	if (crop.x + crop.width > layout.canvas.width - layout.canvas.padding) {
-		crop.width = (layout.canvas.width - layout.canvas.padding) - crop.x;
+	if (crop.x + crop.width > layout.canvas.width) {
+		crop.width = layout.canvas.width - crop.x;
 	}
 
-	if (crop.y + crop.height > layout.canvas.height - layout.canvas.padding) {
-		crop.height = (layout.canvas.height - layout.canvas.padding) - crop.y;
+	if (crop.y + crop.height > layout.canvas.height) {
+		crop.height = layout.canvas.height - crop.y;
 	}
 
 	return crop;
@@ -151,22 +151,22 @@ const ACTIONS = {
 
 		let newX = crop.x + xDiff;
 
-		if (newX < layout.canvas.padding) {
-			newX = layout.canvas.padding;
+		if (newX < 0) {
+			newX = 0;
 		}
 
-		if (newX + crop.width > layout.canvas.width - layout.canvas.padding) {
-			newX = layout.canvas.width - layout.canvas.padding - crop.width;
+		if (newX + crop.width > layout.canvas.width) {
+			newX = layout.canvas.width - crop.width;
 		}
 
 		let newY = crop.y + yDiff;
 
-		if (newY < layout.canvas.padding) {
-			newY = layout.canvas.padding;
+		if (newY < 0) {
+			newY = 0;
 		}
 
-		if (newY + crop.height > layout.canvas.height - layout.canvas.padding) {
-			newY = layout.canvas.height - layout.canvas.padding - crop.height;
+		if (newY + crop.height > layout.canvas.height) {
+			newY = layout.canvas.height - crop.height;
 		}
 
 		setEditorState({
