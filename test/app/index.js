@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 // import Whiteboard from '../../src/index';
-import {Editor, Display} from '../../src/image-editor';
+import {Editor, Display, getImageForEditorState} from '../../src/image-editor';
 
 import 'nti-style-common/all.scss';
 import 'nti-web-commons/lib/index.css';
@@ -15,33 +15,33 @@ import 'nti-web-commons/lib/index.css';
 const formatting = {
 	crop: {
 		width: 200,
-		height: 300,
-		aspectRatio: 2 / 3
+		height: 300
 	}
 };
 
 class Test extends React.Component {
 	state = {}
 
-	onChange = (editorState) => {
-		debugger;
+	onChange = async (editorState) => {
+		const img = await getImageForEditorState(editorState);
+
 		this.setState({
-			editorState
+			src: img.src
 		});
 	}
 
 	render () {
-		const {editorState} = this.state;
+		const {src} = this.state;
 
 		return (
 			<div>
 				<div>
 					<h1>Editor</h1>
-					<Editor formatting={formatting} onChange={this.onChange}/>
+					<Editor editorState={{formatting}} onChange={this.onChange}/>
 				</div>
 				<div>
 					<h1>Display</h1>
-					{editorState && (<Display editorState={editorState} />)}
+					{src && (<img src={src} style={{margin: '0 auto', display: 'block', border: '1px solid red'}}/>)}
 				</div>
 			</div>
 		);

@@ -8,17 +8,19 @@ export default function getImageForEditorState (editorState) {
 
 	const {layout, formatting, image} = editorState;
 
+	if (!image) { return Promise.reject(); }
+
 	let outputLayout = layout || {
 		image: {
 			src: image,
 			x: 0, y: 0,
-			width: image.width,
-			height: image.height
+			width: image ? image.width : 0,
+			height: image ? image.height : 0
 		},
 		canvas: {
 			padding: 0,
-			width: image.width,
-			height: image.height
+			width: image ? image.width : 0,
+			height: image ? image.height : 0
 		}
 	};
 
@@ -35,13 +37,19 @@ export default function getImageForEditorState (editorState) {
 	ctx.lineWidth = 1;
 
 	for (let tool of TOOLS) {
-		if (tool.outpout && tool.output.before) {
+		if (tool.output && tool.output.before) {
 			tool.output.before(ctx, formatting, layout);
 		}
 	}
 
 	ctx.save();
-	ctx.drawImage(outputLayout.image.src, outputLayout.image.x, outputLayout.image.y, outputLayout.image.width, outputLayout.image.height);
+	ctx.drawImage(
+		outputLayout.image.src,
+		outputLayout.image.x,
+		outputLayout.image.y,
+		outputLayout.image.width,
+		outputLayout.image.height
+	);
 	ctx.restore();
 
 	for (let tool of TOOLS) {

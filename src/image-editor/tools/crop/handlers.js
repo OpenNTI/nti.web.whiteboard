@@ -1,18 +1,10 @@
 import {CORNER_RADIUS} from './Constants';
 
-function getRelativePoint (point, canvas) {
-	const rect = canvas.getBoundingClientRect();
 
-	return [
-		point[0] - rect.left,
-		point[1] - rect.top
-	];
-}
-
-function getPointForEvent (e, canvas) {
+function getPointForEvent (e) {
 	const {clientX:eventX, clientY:eventY} = e;
 
-	return getRelativePoint([eventX, eventY], canvas);
+	return [eventX, eventY];
 }
 
 function isInCrop (point, crop) {
@@ -367,12 +359,12 @@ export default {
 		};
 	},
 
-	onMouseMove (e, canvas, formatting, layout, setEditorState) {
+	onMouseMove (e, formatting, layout, setEditorState) {
 		const {crop} = formatting;
 
 		if (!crop) { return; }
 
-		const point = getPointForEvent(e, canvas);
+		const point = getPointForEvent(e);
 
 		if (crop.action && ACTIONS[crop.action.name]) {
 			return ACTIONS[crop.action.name](point, crop, crop.action, formatting, layout, setEditorState);
@@ -390,12 +382,12 @@ export default {
 	},
 
 
-	onMouseDown (e, canvas, formatting, layout, setEditorState) {
+	onMouseDown (e, formatting, layout, setEditorState) {
 		const {crop} = formatting;
 
 		if (!crop) { return; }
 
-		const point = getPointForEvent(e, canvas);
+		const point = getPointForEvent(e);
 
 		let action;
 
@@ -442,7 +434,7 @@ export default {
 	},
 
 
-	onMouseUp (e, canvas, formatting, layout, setEditorState) {
+	onMouseUp (e, formatting, layout, setEditorState) {
 		const {crop} = formatting;
 
 		if (!crop) { return; }
@@ -461,7 +453,7 @@ export default {
 	},
 
 
-	onMouseOut (e, canvas, formatting, layout, setEditorState) {
+	onMouseOut (e, formatting, layout, setEditorState) {
 		const {crop} = formatting;
 
 		if (!crop) { return; }

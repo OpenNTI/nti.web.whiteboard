@@ -18,18 +18,18 @@ export function getImgSrc (file) {
 }
 
 
-export function getLayoutFor (img, size, padding) {
+export function getLayoutFor (img, size) {
 	const imgSize = {height: img.height, width: img.width};
 	const canvasSize = {height: size.height, width: size.width};
 	const scale = img.width / canvasSize.width;
 
-	if (imgSize.width + (padding * 2) > canvasSize.width) {
-		imgSize.width = Math.round(imgSize.width / scale) - (padding * 2);
-		imgSize.height = Math.round(imgSize.height / scale) - (padding * 2);
+	if (imgSize.width > canvasSize.width) {
+		imgSize.width = Math.round(imgSize.width / scale);
+		imgSize.height = Math.round(imgSize.height / scale);
 	}
 
-	canvasSize.width = imgSize.width + (padding * 2);
-	canvasSize.height = imgSize.height + (padding * 2);
+	canvasSize.width = imgSize.width;
+	canvasSize.height = imgSize.height;
 
 	const x = Math.round((canvasSize.width - imgSize.width) / 2);
 	const y = Math.round((canvasSize.height - imgSize.height) / 2);
@@ -43,8 +43,7 @@ export function getLayoutFor (img, size, padding) {
 		},
 		canvas: {
 			width: canvasSize.width,
-			height: canvasSize.height,
-			padding
+			height: canvasSize.height
 		}
 	};
 }

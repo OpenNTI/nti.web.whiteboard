@@ -11,6 +11,19 @@ const TOOLS = [
 
 const CANVAS_PADDING = 20;
 
+function getMouseEvent (e, canvas) {
+	const rect = canvas.getBoundingClientRect();
+
+	return {
+		clientX: e.clientX - rect.left - CANVAS_PADDING,
+		clientY: e.clientY - rect.top - CANVAS_PADDING
+	};
+	// return {
+	// 	clientX: e.clientX - CANVAS_PADDING,
+	// 	clientY: e.clientY - CANVAS_PADDING
+	// };
+}
+
 export default class ImageEditor extends React.Component {
 	static propTypes = {
 		editorState: PropTypes.object,
@@ -84,8 +97,16 @@ export default class ImageEditor extends React.Component {
 	onChange () {
 		const {onChange} = this.props;
 
+		let {formatting, layout, image} = this.currentState;
+
+		// for (let tool of TOOLS) {
+		// 	if (tool.output && tool.output.fixFormatting) {
+		// 		formatting = tool.output.fixFormatting(formatting, layout);
+		// 	}
+		// }
+
 		if (onChange) {
-			onChange(this.currentState);
+			onChange({formatting, layout, image});
 		}
 	}
 
@@ -98,10 +119,10 @@ export default class ImageEditor extends React.Component {
 		const ctx = canvas.getContext('2d');
 
 		//reset the canvas
-		canvas.width = layout.canvas.width;
-		canvas.height = layout.canvas.height;
+		canvas.width = layout.canvas.width + 2 * CANVAS_PADDING;
+		canvas.height = layout.canvas.height + 2 * CANVAS_PADDING;
 
-		ctx.setTransform(1, 0, 0, 1, 0, 0);
+		ctx.setTransform(1, 0, 0, 1, CANVAS_PADDING, CANVAS_PADDING);
 		ctx.lineWidth = 1;
 
 		//do an drawing before the image
@@ -198,21 +219,21 @@ export default class ImageEditor extends React.Component {
 		const {activeControl} = this.state;
 
 		if (activeControl && activeControl[name]) {
-			activeControl[name](...args, this.canvas, this.currentFormatting, this.currentLayout, this.setEditorState);
+			activeControl[name](...args, this.currentFormatting, this.currentLayout, this.setEditorState);
 		}
 
 		for (let tool of TOOLS) {
 			if (tool[name]) {
-				tool[name](...args, this.canvas, this.currentFormatting, this.currentLayout, this.setEditorState);
+				tool[name](...args, this.currentFormatting, this.currentLayout, this.setEditorState);
 			}
 		}
 	}
 
 
-	onMouseDown = (e) => this.onMouseEvent('onMouseDown', e)
-	onMouseUp = (e) => this.onMouseEvent('onMouseUp', e)
-	onMouseMove = (e) => this.onMouseEvent('onMouseMove', e)
-	onMouseOut = (e) => this.onMouseEvent('onMouseOut', e)
+	onMouseDown = (e) => this.onMouseEvent('onMouseDown', getMouseEvent(e, this.canvas))
+	onMouseUp = (e) => this.onMouseEvent('onMouseUp', getMouseEvent(e, this.canvas))
+	onMouseMove = (e) => this.onMouseEvent('onMouseMove', getMouseEvent(e, this.canvas))
+	onMouseOut = (e) => this.onMouseEvent('onMouseOut', getMouseEvent(e, this.canvas))
 
 
 	render () {
@@ -223,9 +244,16 @@ export default class ImageEditor extends React.Component {
 			cursor: cursor || 'default'
 		};
 
+		const canvasStyles = {
+			margin: `${-CANVAS_PADDING}px 0 0 ${-CANVAS_PADDING}px`
+		};
+
 		if (layout) {
 			styles.height = `${layout.canvas.height}px`;
 			styles.width = `${layout.canvas.width}px`;
+
+			canvasStyles.height = `${layout.canvas.height + (2 * CANVAS_PADDING)}px`;
+			canvasStyles.width = `${layout.canvas.width + (2 * CANVAS_PADDING)}px`;
 		}
 
 		return (
@@ -234,13 +262,12 @@ export default class ImageEditor extends React.Component {
 				{layout && (
 					<div className="canvas-container" style={styles}>
 						<canvas
+							style={canvasStyles}
 							onMouseDown={this.onMouseDown}
 							ref={this.setCanvas}
 							onMouseUp={this.onMouseUp}
 							onMouseMove={this.onMouseMove}
 							onMouseOut={this.onMouseOut}
-							width={5}
-							height={3}
 						/>
 					</div>
 				)}
