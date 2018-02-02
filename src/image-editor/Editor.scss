@@ -1,6 +1,4 @@
 .nti-image-editor {
-	min-width: 70vh;
-	padding: 20px;
 	display: flex;
 	align-items: center;
 	flex-direction: column;
@@ -17,8 +15,6 @@
 		width: calc(100% + 40px);
 		height: calc(100% + 40px);
 		display: block;
-
-		border: 1px solid red;
 	}
 
 	.tool-bar {

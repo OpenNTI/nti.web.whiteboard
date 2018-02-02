@@ -1,3 +1,4 @@
+export getBlobForEditorState from './get-blob-for-editor-state';
 export getEditorState from './get-editor-state';
 export getImageForEditorState from './get-image-for-editor-state';
 
