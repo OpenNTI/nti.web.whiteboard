@@ -1,35 +1,40 @@
 import {CORNER_RADIUS} from './Constants';
 
 export default {
-	before (ctx, formatting, layout) {
+	after (ctx, formatting, layout, getLayerFor) {
 		const {crop} = formatting || {};
 
 		if (!crop) { return; }
 
-		//Draw the mask
-		ctx.save();
-		ctx.fillStyle = 'rgba(0,0,0,0.7)';
-		ctx.fillRect(layout.image.x, layout.image.y, layout.image.width, layout.image.height);
-		ctx.restore();
+		const layer = getLayerFor('crop');
+		const layerCtx = layer.getContext('2d');
 
-		//cut out the masked area
-		ctx.save();
-		ctx.fillStyle = '#000';
-		ctx.globalCompositeOperation = 'destination-out';
-		ctx.fillRect(crop.x, crop.y, crop.width, crop.height);
-		ctx.restore();
-	},
+		//Draw the mask as a layer
+		layer.width = layout.canvas.width;
+		layer.height = layout.canvas.height;
 
-	after (ctx, formatting, layout) {
-		const {crop} = formatting || {};
+		layerCtx.setTransform(1, 0, 0, 1, 0, 0);
+		layerCtx.lineWidth = 1;
 
-		if (!crop) { return; }
+		layerCtx.save();
+		layerCtx.fillStyle = 'rgba(0,0,0,0.7)';
+		layerCtx.fillRect(layout.image.x, layout.image.y, layout.image.width, layout.image.height);
+		layerCtx.restore();
 
-		ctx.save();
-		ctx.strokeStyle = 'rgba(255,255,255,0.7)';
-		ctx.strokeRect(crop.x, crop.y, crop.width, crop.height);
-		ctx.restore();
+		layerCtx.save();
+		layerCtx.fillStyle = '#000';
+		layerCtx.globalCompositeOperation = 'destination-out';
+		layerCtx.fillRect(crop.x, crop.y, crop.width, crop.height);
+		layerCtx.restore();
 
+		layerCtx.save();
+		layerCtx.strokeStyle = 'rgba(255,255,255,0.7)';
+		layerCtx.strokeRect(crop.x, crop.y, crop.width, crop.height);
+		layerCtx.restore();
+
+		ctx.drawImage(layer, 0, 0, layer.width, layer.height);
+
+		//Draw the controls directly to the canvas
 		ctx.save();
 		ctx.fillStyle = '#fff';
 		ctx.strokeStyle = '#ccc';
@@ -65,5 +70,24 @@ export default {
 		nib(crop.x, crop.y + crop.height);
 
 		ctx.restore();
+
 	}
 };
+
+
+// const {crop} = formatting || {};
+
+// if (!crop) { return; }
+
+// //Draw the mask
+// ctx.save();
+// ctx.fillStyle = 'rgba(0,0,0,0.7)';
+// ctx.fillRect(layout.image.x, layout.image.y, layout.image.width, layout.image.height);
+// ctx.restore();
+
+// //cut out the masked area
+// ctx.save();
+// ctx.fillStyle = '#000';
+// ctx.globalCompositeOperation = 'destination-out';
+// ctx.fillRect(crop.x, crop.y, crop.width, crop.height);
+// ctx.restore();

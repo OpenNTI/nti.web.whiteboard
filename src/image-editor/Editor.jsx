@@ -6,7 +6,7 @@ import Upload from './Upload';
 import {Crop, Rotate, Blur} from './tools';
 
 const TOOLS = [
-	Crop, Rotate, Blur
+	Blur, Crop, Rotate
 ];
 
 const CANVAS_PADDING = 20;
@@ -90,6 +90,17 @@ export default class ImageEditor extends React.Component {
 	}
 
 
+	getLayerFor = (name) => {
+		this.layers = this.layers || {};
+
+		if (!this.layers[name]) {
+			this.layers[name] = document.createElement('canvas');
+		}
+
+		return this.layers[name];
+	}
+
+
 	onChange () {
 		const {onChange} = this.props;
 
@@ -124,19 +135,18 @@ export default class ImageEditor extends React.Component {
 		//do an drawing before the image
 		for (let tool of TOOLS) {
 			if (tool.draw && tool.draw.before) {
-				tool.draw.before(ctx, formatting, layout);
+				tool.draw.before(ctx, formatting, layout, this.getLayerFor);
 			}
 		}
 
 		ctx.save();
-		ctx.globalCompositeOperation = 'destination-over';
 		ctx.drawImage(layout.image.src, layout.image.x, layout.image.y, layout.image.width, layout.image.height);
 		ctx.restore();
 
 
 		for (let tool of TOOLS) {
 			if (tool.draw && tool.draw.after) {
-				tool.draw.after(ctx, formatting, layout);
+				tool.draw.after(ctx, formatting, layout, this.getLayerFor);
 			}
 		}
 

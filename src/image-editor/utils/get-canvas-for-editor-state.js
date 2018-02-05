@@ -38,7 +38,7 @@ export default function getCanvasForEditorState (editorState) {
 
 	for (let tool of TOOLS) {
 		if (tool.output && tool.output.before) {
-			tool.output.before(ctx, formatting, layout);
+			tool.output.before(ctx, formatting, outputLayout);
 		}
 	}
 
@@ -54,7 +54,7 @@ export default function getCanvasForEditorState (editorState) {
 
 	for (let tool of TOOLS) {
 		if (tool.output && tool.output.after) {
-			tool.output.after(ctx, formatting, layout);
+			tool.output.after(ctx, formatting, outputLayout);
 		}
 	}
 

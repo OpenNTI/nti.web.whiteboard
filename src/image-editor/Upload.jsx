@@ -78,6 +78,8 @@ export default class Upload extends React.Component {
 				const img = new Image();
 
 				img.onload = () => {
+					img.setAttribute('data-file-id', `${file.name}-${file.lastModified}`);
+
 					this.setState({loading: false, error: null});
 
 					if (onChange) {

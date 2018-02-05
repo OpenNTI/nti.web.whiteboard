@@ -18,7 +18,7 @@ const formatting = {
 		height: 300
 	},
 	blur: {
-		radius: 100
+		radius: 50
 	}
 };
 
