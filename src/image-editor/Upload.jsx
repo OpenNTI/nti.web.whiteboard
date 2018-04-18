@@ -14,7 +14,7 @@ const DEFAULT_TEXT = {
 	tooLarge: 'File is too large.',
 	unknownError: 'Unable to upload file.'
 };
-const t = scoped('nti-web-whiteboard.image-editor.Upload', DEFAULT_TEXT);
+const t = scoped('web-whiteboard.image-editor.Upload', DEFAULT_TEXT);
 
 const ALLOWED_TYPES = {
 	'image/png': true,
