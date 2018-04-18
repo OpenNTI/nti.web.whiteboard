@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Canvas as WhiteboardRenderer} from 'nti-lib-whiteboardjs';
-import {URL} from 'nti-lib-dom';
-import {Constants} from 'nti-web-commons';
+import {Canvas as WhiteboardRenderer} from '@nti/lib-whiteboard';
+import {URL} from '@nti/lib-dom';
+import {Constants} from '@nti/web-commons';
 
 const {DataURIs: {BLANK_IMAGE}} = Constants;
 

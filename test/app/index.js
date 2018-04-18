@@ -4,8 +4,8 @@ import ReactDOM from 'react-dom';
 // import Whiteboard from '../../src/index';
 import {Editor, getImageForEditorState} from '../../src/image-editor';
 
-import 'nti-style-common/all.scss';
-import 'nti-web-commons/lib/index.css';
+import '@nti/style-common/all.scss';
+import '@nti/web-commons/lib/index.css';
 
 // ReactDOM.render(
 // 	React.createElement(Whiteboard, {}),

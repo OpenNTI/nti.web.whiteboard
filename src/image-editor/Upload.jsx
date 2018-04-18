@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {scoped} from 'nti-lib-locale';
 import cx from 'classnames';
-// import {Input} from 'nti-web-commons';
+import {scoped} from '@nti/lib-locale';
+// import {Input} from '@nti/web-commons';
 
 import {getImgSrc} from './utils';
 
