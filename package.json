@@ -4,11 +4,12 @@
   "author": "nextthought",
   "description": "A whiteboard component for ReactJS",
   "license": "UNLICENSED",
-  "main": "lib/cjs-index.js",
-  "module": "lib/index.js",
+  "main": "lib/index.js",
+  "module": "src/index.js",
   "style": "./lib/index.css",
   "files": [
-    "lib"
+    "lib",
+    "src"
   ],
   "scripts": {
     "test": "cmp-scripts test",
@@ -43,7 +44,7 @@
     "stackblur-canvas": "^1.4.1"
   },
   "devDependencies": {
-    "@nti/cmp-scripts": "^1.17.16",
+    "@nti/cmp-scripts": "^2.0.0",
     "@nti/style-common": "^1.3.0",
     "enzyme": "^3.0.0",
     "enzyme-adapter-react-16": "^1.0.1",
