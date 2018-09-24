@@ -125,9 +125,12 @@ export default class ImageEditor extends React.Component {
 		const {activeTool} = this.state;
 		const ctx = canvas.getContext('2d');
 
+		const padding = 2 * CANVAS_PADDING;
+		const {width, height} = layout.canvas;
+
 		//reset the canvas
-		canvas.width = layout.canvas.width + 2 * CANVAS_PADDING;
-		canvas.height = layout.canvas.height + 2 * CANVAS_PADDING;
+		canvas.width = width + padding;
+		canvas.height = height + padding;
 
 		ctx.setTransform(1, 0, 0, 1, CANVAS_PADDING, CANVAS_PADDING);
 		ctx.lineWidth = 1;
