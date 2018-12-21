@@ -14,9 +14,11 @@ const CANVAS_PADDING = 20;
 function getMouseEvent (e, canvas) {
 	const rect = canvas.getBoundingClientRect();
 
+	const clientInfo = e.touches ? e.touches[0] : e;
+
 	return {
-		clientX: e.clientX - rect.left - CANVAS_PADDING,
-		clientY: e.clientY - rect.top - CANVAS_PADDING
+		clientX: clientInfo.clientX - rect.left - CANVAS_PADDING,
+		clientY: clientInfo.clientY - rect.top - CANVAS_PADDING
 	};
 }
 
@@ -244,6 +246,10 @@ export default class ImageEditor extends React.Component {
 	onMouseMove = (e) => this.onMouseEvent('onMouseMove', getMouseEvent(e, this.canvas))
 	onMouseOut = (e) => this.onMouseEvent('onMouseOut', getMouseEvent(e, this.canvas))
 
+	onTouchStart = (e) => this.onMouseEvent('onMouseDown', getMouseEvent(e, this.canvas))
+	onTouchEnd = (e) => this.onMouseEvent('onMouseUp', getMouseEvent(e, this.canvas))
+	onTouchMove = (e) => this.onMouseEvent('onMouseMove', getMouseEvent(e, this.canvas));
+
 
 	render () {
 		const {cursor} = this.currentState;
@@ -277,6 +283,9 @@ export default class ImageEditor extends React.Component {
 							onMouseUp={this.onMouseUp}
 							onMouseMove={this.onMouseMove}
 							onMouseOut={this.onMouseOut}
+							onTouchStart={this.onTouchStart}
+							onTouchEnd={this.onTouchEnd}
+							onTouchMove={this.onTouchMove}
 						/>
 					</div>
 				)}
