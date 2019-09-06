@@ -2,7 +2,7 @@ export default function LgObjectToSvg(lgObject) {
 
     //save from object to string before writing out
     const svgString = `
-        <!-- nti-linear-gradient test -->
+        <!-- nti-linear-gradient -->
         <svg xmlns="http://www.w3.org/2000/svg">
         <defs>
                 <linearGradient id="Gradient" gradientTransform="${lgObject.rotation}" viewBox="0 0 10 1">
