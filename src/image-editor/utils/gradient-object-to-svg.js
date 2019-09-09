@@ -1,3 +1,11 @@
+const printStops = (gradientObject) => {
+	let s = '';
+	gradientObject.stops.map((lg) => {
+		s += (`<stop offset="${lg.offset}" stopColor="${lg.stopcolor}"/>`);
+	});
+	return s;
+};
+
 export default function GradientObjectToSvg (gradientObject) {
 
 	//save from object to string before writing out
@@ -5,13 +13,3 @@ export default function GradientObjectToSvg (gradientObject) {
 
 	return svgString;
 }
-
-const printStops = (gradientObject) => {
-	let s = '';
-	gradientObject.stops.map((lg) => {
-		s += (`<stop offset="${lg.offset}" stopColor="${lg.stopcolor}"/>`);
-	});
-	return s;
-
-};
-
