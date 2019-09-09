@@ -1,4 +1,4 @@
-export default function SvgToLgObject(svgString) {
+export default function SvgToGradientObject(svgString) {
 
     if(!svgString.includes("nti-linear-gradient")){
         console.warn("svg file wasnt from nti");
