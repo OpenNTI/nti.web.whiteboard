@@ -7,7 +7,7 @@ export default function SvgToLgObject(svgString) {
 
     //find attributes
     const json = {
-        "rotation":'',
+        "rotation":"",
         "stops":[],
     };
 
