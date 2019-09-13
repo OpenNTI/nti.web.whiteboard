@@ -5,6 +5,9 @@ import {Input} from '@nti/web-commons';
 
 import Styles from './Editor.css';
 
+//this is here until linear gradient is properly located
+import LinearGradient from './LinearGradient'
+
 const {Color} = Input;
 const cx = classnames.bind(Styles);
 
@@ -30,6 +33,7 @@ export default class LinearGradientEditor extends React.Component {
 
 		return (
 			<div className={cx('solid-color-editor')}>
+				<LinearGradient />
 				<Color.SaturationBrightness value={color} onChange={this.onChange} />
 				<Color.Hue value={color} onChange={this.onChange} />
 			</div>
