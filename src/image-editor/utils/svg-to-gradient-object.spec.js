@@ -1,5 +1,5 @@
 /* eslint-env jest */
-import svgToGradientObject from '../image-editor/utils/svg-to-gradient-object';
+import svgToGradientObject from './svg-to-gradient-object';
 
 describe('Show Tests Working', () => {
 
