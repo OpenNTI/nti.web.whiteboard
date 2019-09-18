@@ -1,0 +1,16 @@
+.parent {
+	position: relative;
+}
+
+.leftThumb {
+	position: absolute;
+	left: 0%;
+}
+
+.rightThumb {
+	position: absolute;
+	left: calc(100% - 14px);
+}
+
+
+

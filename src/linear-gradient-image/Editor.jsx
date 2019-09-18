@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames/bind';
 import {Input} from '@nti/web-commons';
+import LinearGradient from './LinearGradient';
 
 import Styles from './Editor.css';
 
@@ -9,6 +10,7 @@ const {Color} = Input;
 const cx = classnames.bind(Styles);
 
 export default class LinearGradientEditor extends React.Component {
+
 	static propTypes = {
 		value: PropTypes.shape({
 			color: PropTypes.object
@@ -30,6 +32,7 @@ export default class LinearGradientEditor extends React.Component {
 
 		return (
 			<div className={cx('solid-color-editor')}>
+				<LinearGradient value={color} onChange={this.onChange} />
 				<Color.SaturationBrightness value={color} onChange={this.onChange} />
 				<Color.Hue value={color} onChange={this.onChange} />
 			</div>
