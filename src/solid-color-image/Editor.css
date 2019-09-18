@@ -1,0 +1,16 @@
+.solid-color-editor .container {
+	padding: 1rem 1.25rem;
+}
+
+.solid-color-editor .text-input {
+	margin: 1rem 0;
+}
+
+.preset-label {
+	display: block;
+	font-size: 0.625rem;
+	font-weight: bold;
+	text-transform: uppercase;
+	color: var(--secondary-grey);
+	margin-bottom: 0.625rem;
+}
