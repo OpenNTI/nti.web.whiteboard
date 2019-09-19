@@ -7,7 +7,7 @@ const RotateRegex = /^rotate\((.*)\)$/;
 function getRotationFromTransform (transform) {
 	const matches = transform.match(RotateRegex);
 
-	return matches[0];
+	return matches[1];
 }
 
 function getColorSafe (value) {
