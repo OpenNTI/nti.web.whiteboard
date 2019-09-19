@@ -1,0 +1,29 @@
+.gradient-preview {
+	padding: 1.875rem 1.25rem;
+}
+
+.preview {
+	position: relative;
+	height: 10px;
+	border: 1px solid rgba(0, 0, 0, 0.11);
+}
+
+.first-stop,
+.second-stop {
+	position: absolute;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	cursor: pointer;
+}
+
+.selected {
+	transform: scale(1.7) translate(-29%, -29%);
+}
+
+.first-stop {
+	left: 0;
+}
+
+.second-stop {
+	left: 100%;
+}

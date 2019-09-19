@@ -1,1 +1,1 @@
-export const SVG_IDENTIFIER = '<!-- nti-linear-gradient -->'
+export const SVG_IDENTIFIER = '<!-- nti-linear-gradient -->';

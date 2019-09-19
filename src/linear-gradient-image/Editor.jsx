@@ -1,40 +1,53 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames/bind';
-import {Input} from '@nti/web-commons';
-import LinearGradient from './LinearGradient';
 
 import Styles from './Editor.css';
+import Preview from './components/Preview';
+import Stop from './components/Stop';
 
-const {Color} = Input;
 const cx = classnames.bind(Styles);
 
 export default class LinearGradientEditor extends React.Component {
 
 	static propTypes = {
 		value: PropTypes.shape({
-			color: PropTypes.object
+			rotation: PropTypes.string,
+			stops: PropTypes.array
 		}),
 		onChange: PropTypes.func
 	}
 
-	onChange = (color) => {
-		const {onChange} = this.props;
+	state = {selectedStop: 0}
+
+	selectStop = stop => this.setState({selectedStop: stop})
+
+	updateSelectedStop = (stop) => {
+		const {value, onChange} = this.props;
+		const {selectedStop} = this.state;
 
 		if (onChange) {
-			onChange({color});
+			onChange(
+				{
+					...value,
+					stops: value.stops.map((s, i) => i === selectedStop ? stop : s)
+				}
+			);
 		}
 	}
 
 	render () {
 		const {value} = this.props;
-		const {color} = value || {};
+		const {selectedStop} = this.state;
+		const stops = value && value.stops;
+		const selected = stops && stops[selectedStop];
 
 		return (
 			<div className={cx('solid-color-editor')}>
-				<LinearGradient value={color} onChange={this.onChange} />
-				<Color.SaturationBrightness value={color} onChange={this.onChange} />
-				<Color.Hue value={color} onChange={this.onChange} />
+				<Preview stops={stops} selectStop={this.selectStop} selectedStop={selectedStop} />
+				{selected && (
+					<Stop stop={selected} onChange={this.updateSelectedStop} />
+				)}
 			</div>
 		);
 	}
