@@ -101,7 +101,7 @@ export default class Upload extends React.Component {
 	}
 
 
-	handleDragOver = (e) => e.stopPropagation()
+	handleDragOver = (e) => (e.stopPropagation(), e.preventDefault())
 	onDrop = (e) => {
 		e.preventDefault();
 		e.stopPropagation();
