@@ -28,6 +28,7 @@ export default class Upload extends React.Component {
 		onChange: PropTypes.func.isRequired
 	}
 	state = { loading: false }
+	input = React.createRef()
 
 	uploadAssets = (file) => {
 		const { onChange } = this.props;
@@ -45,13 +46,8 @@ export default class Upload extends React.Component {
 		});
 	}
 
-
-	onFileChange = (e) => {
-		e.preventDefault();
-
+	loadFile (file) {
 		const {onChange} = this.props;
-		const files = e.target.files;
-		const file = files && files[0];
 
 		if (!file) { return; }
 
@@ -95,12 +91,33 @@ export default class Upload extends React.Component {
 	}
 
 
+	onFileChange = (e) => {
+		e.preventDefault();
+
+		const files = e.target.files;
+		const file = files && files[0];
+
+		this.loadFile(file);
+	}
+
+
+	handleDragOver = (e) => e.stopPropagation()
+	onDrop = (e) => {
+		e.preventDefault();
+		e.stopPropagation();
+
+		const {dataTransfer} = e.nativeEvent;
+		const files = dataTransfer && dataTransfer.files;
+
+		this.loadFile(files[0]);
+	}
+
 	render () {
 		const {error, loading} = this.state;
 
 		return (
-			<div className={cx('nti-image-editor-upload', {loading})}>
-				<input type="file" className="asset-file" onChange={this.onFileChange} />
+			<div className={cx('nti-image-editor-upload', {loading})} onDragOver={this.handleDragOver} onDrop={this.onDrop}>
+				<input type="file" className="asset-file" onChange={this.onFileChange} ref={this.input}/>
 				<div className="container">
 					<i className="icon-upload" />
 					<span className="title">{t('title')}</span>
