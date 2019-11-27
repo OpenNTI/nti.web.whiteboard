@@ -7,7 +7,7 @@ export default {
 		if (!darken || !darken.color) { return; }
 		
 		const color = Color(darken.color);
-		const alpha = darken.opacity || 1;
+		const alpha = darken.opacity != null ? darken.opacity : 1;
 
 		const layer = getLayer('darken');
 		const layerCtx = layer.getContext('2d');

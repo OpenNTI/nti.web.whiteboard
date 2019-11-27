@@ -1,0 +1,31 @@
+.control {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
+
+.control + .control {
+	margin-top: 15px;
+}
+
+.label {
+	flex: 1 1 auto;
+	font-size: 0.875rem;
+	font-weight: bold;
+	color: var(--secondary-grey);
+}
+
+.inputs {
+	flex: 0 0 auto;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
+
+.inputs :global(.nti-range-input) {
+	width: 200px;
+}
+
+.inputs :global(.flyout-trigger) {
+	margin-right: 0.5rem;
+}

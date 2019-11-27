@@ -1,24 +1,49 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {scoped} from '@nti/lib-locale';
+import {Color} from '@nti/lib-commons';
+import {Input} from '@nti/web-commons';
+
+import Control from '../../../tool-bar/Control';
+
+const t = scoped('nti-web-whiteboard.image-editor.tools.darken.control.View', {
+	label: 'Darken'
+});
 
 function getDarkenOpacity (editorState) {
-	return editorState && editorState.formatting && editorState.formatting.darken && editorState.formatting.darken.alpha;
+	return editorState && editorState.formatting && editorState.formatting.darken && editorState.formatting.darken.opacity;
 }
+
+function getDarkenColor (editorState) {
+	return editorState && editorState.formatting && editorState.formatting.darken && editorState.formatting.darken.color;
+}
+
 
 function setDarkenOpacity (editorState, opacity) {
 	return {
-		...editorState,
+		...(editorState || {}),
 		formatting: {
-			...editorState.formatting,
+			...((editorState && editorState.formatting) || {}),
 			darken: {
-				...editorState.darken,
+				...((editorState && editorState.formatting && editorState.formatting.darken) || {}),
 				opacity
 			}
 		}
 	};
 }
 
-const coerce = x => isNaN(x) ? null : parseInt(x, 10);
+function setDarkenColor (editorState, color) {
+	return {
+		...(editorState || {}),
+		formatting: {
+			...((editorState && editorState.formatting) || {}),
+			darken: {
+				...((editorState && editorState.formatting && editorState.formatting.darken) || {}),
+				color
+			}
+		}
+	};
+}
 
 DarkenControl.Name = 'Darken';
 DarkenControl.propTypes = {
@@ -27,15 +52,24 @@ DarkenControl.propTypes = {
 };
 export default function DarkenControl ({editorState, setEditorState}) {
 	const opacity = getDarkenOpacity(editorState) || 0;
+	const color = getDarkenColor(editorState) || '#fff';
 
-	const onChange = (e) => {
-		setEditorState(setDarkenOpacity(editorState, Math.round(coerce(e.target.value) / 100)));
+	const onOpacityChange = (value) => {
+		setEditorState(setDarkenOpacity(editorState, value / 100));
+	};
+
+	const onColorChange = (value) => {
+		setEditorState(setDarkenColor(editorState, value.hex.toString()));
 	};
 
 	return (
-		<div>
-			Darken Control
-			<input type="range" min={0} max={100} value={opacity * 100} onChange={onChange} />
-		</div>
+		<Control label={t('label')}>
+			<Input.Color.Flyout
+				value={Color(color)}
+				onChange={onColorChange}
+				arrow
+			/>
+			<Input.Range value={opacity * 100} min={0} max={100} onChange={onOpacityChange} />
+		</Control>
 	);
 }

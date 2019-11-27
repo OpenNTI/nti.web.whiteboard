@@ -1,20 +1,26 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {scoped} from '@nti/lib-locale';
+import {Input} from '@nti/web-commons';
+
+import Control from '../../../tool-bar/Control';
+
+const t = scoped('nti-web-whiteboard.image-editor.tools.blur.control.View', {
+	label: 'Blur'
+});
 
 function getBlurRadius (editorState) {
 	return editorState && editorState.formatting && editorState.formatting.blur && editorState.formatting.blur.radius;
 }
 
-function setBlurRadius (editorState, blur) {
-	const radius = isNaN(blur) ? null : parseInt(blur, 10);
-
+function setBlurRadius (editorState, radius) {
 	return {
-		...editorState,
+		...(editorState || {}),
 		formatting: {
-			...editorState.formatting,
+			...((editorState && editorState.formatting) || {}),
 			blur: {
-				...editorState.blur,
-				radius: radius
+				...((editorState && editorState.formatting && editorState.formatting.blur) || {}),
+				radius
 			}
 		}
 	};
@@ -29,14 +35,13 @@ BlurControl.propTypes = {
 export default function BlurControl ({editorState, setEditorState}) {
 	const radius = getBlurRadius(editorState);
 	
-	const onChange = (e) => {
-		setEditorState(setBlurRadius(editorState, e.target.value));
+	const onChange = (value) => {
+		setEditorState(setBlurRadius(editorState, value));
 	};
 
 	return (
-		<div>
-			Blur Control
-			<input type="range" min={0} max={50} value={radius || 0} onChange={onChange}/>
-		</div>
+		<Control label={t('label')}>
+			<Input.Range value={radius} min={0} max={50} onChange={onChange} />
+		</Control>
 	);
 }
