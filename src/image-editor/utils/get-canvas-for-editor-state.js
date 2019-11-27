@@ -1,6 +1,6 @@
-import {Crop, Rotate, Blur} from '../tools';
+import {Crop, Rotate, Blur, Darken} from '../tools';
 
-const TOOLS = [Crop, Rotate, Blur];
+const TOOLS = [Crop, Rotate, Darken,  Blur];
 
 export default function getCanvasForEditorState (editorState) {
 	const canvas = document.createElement('canvas');

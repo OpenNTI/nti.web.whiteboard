@@ -3,10 +3,11 @@ import PropTypes from 'prop-types';
 
 import {getLayoutFor} from './utils';
 import Upload from './Upload';
-import {Crop, Rotate, Blur} from './tools';
+import {Crop, Rotate, Blur, Darken} from './tools';
+import Toolbar from './tool-bar';
 
 const TOOLS = [
-	Blur, Crop, Rotate
+	Blur, Darken, Crop, Rotate
 ];
 
 const CANVAS_PADDING = 20;
@@ -21,9 +22,12 @@ function getMouseEvent (e, canvas) {
 }
 
 export default class ImageEditor extends React.Component {
+	static Controls = Toolbar.Controls;
+
 	static propTypes = {
 		editorState: PropTypes.object,
-		onChange: PropTypes.func
+		onChange: PropTypes.func,
+		allowedControls: PropTypes.any
 	}
 
 	setContainer = x => this.container = x
@@ -285,35 +289,15 @@ export default class ImageEditor extends React.Component {
 		);
 	}
 
-
 	renderToolbar () {
-		const {activeControl} = this.state;
-		const Control = activeControl && activeControl.Component;
+		const {allowedControls} = this.props;
 
 		return (
-			<div className="tool-bar">
-				{Control && (<Control setEditorState={this.setEditorState} formatting={this.currentFormatting} setActiveControl={this.setActiveControl} image={this.currentImage} onImgChange={this.onImgChange}/>)}
-				{!Control && this.renderButtons()}
-			</div>
-		);
-	}
-
-
-	renderButtons () {
-		const buttons = TOOLS.map(tool => tool.Button).filter(x => !!x);
-
-		return (
-			<ul>
-				{
-					buttons.map((Button, index) => {
-						return (
-							<li key={index}>
-								<Button setEditorState={this.setEditorState} formatting={this.currentFormatting} setActiveControl={this.setActiveControl} />
-							</li>
-						);
-					})
-				}
-			</ul>
+			<Toolbar
+				setEditorState={this.setEditorState}
+				editorState={this.currentState}
+				allowedControls={allowedControls}
+			/>
 		);
 	}
 }

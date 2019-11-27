@@ -11,11 +11,16 @@ import {Editor, getImageForEditorState} from '../../src/image-editor';
 
 const formatting = {
 	crop: {
-		width: 200,
-		height: 300
-	},
-	blur: {
-		radius: 50
+		width: 70,
+		height: 70,
+		minSize: {
+			height: 70,
+			width: 70
+		},
+		maxSize: {
+			height: 70,
+			width: 300
+		}
 	}
 };
 
