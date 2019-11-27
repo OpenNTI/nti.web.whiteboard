@@ -1,0 +1,1 @@
+export const Name = 'solid-color-asset';
