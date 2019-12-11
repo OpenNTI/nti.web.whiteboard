@@ -1,72 +1,83 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames/bind';
+import {getService} from '@nti/web-client';
 import {Loading} from '@nti/web-commons';
 
-import Store from './Store';
-import Style from './View.css';
-import Controls from './components/Controls';
-import EditorBody from './components/EditorBody';
+import Styles from './View.css';
+import {getStateForEditor, getIDForEditor} from './types';
+import Image from './types/image';
+import LinearGradient from './types/linear-gradient';
+import SolidColor from './types/solid-color';
 import TypeSwitcher from './components/TypeSwitcher';
+import EditorBody from './components/EditorBody';
 
-const cx = classnames.bind(Style);
+const cx = classnames.bind(Styles);
 
-export default
-@Store.connect(['loading', 'saving', 'save'])
-class CommunityAssetEditor extends React.Component {
-	static syncAssets = Store.syncAssets
+AssetEditor.Image = Image;
+AssetEditor.LinearGradient = LinearGradient;
+AssetEditor.SolidColor = SolidColor;
+AssetEditor.propTypes = {
+	className: PropTypes.string,
+	children: PropTypes.any,
 
-	static deriveBindingFromProps (props) {
-		return {
-			assetURL: props.assetURL,
-			aspectRatio: props.aspectRatio,
-			format: props.format,
+	asset: PropTypes.string,
+	defaultAsset: PropTypes.string,
 
-			onSave: props.onSave,
-			onCancel: props.onCancel
-		};
-	}
+	onSave: PropTypes.func,
+	onCancel: PropTypes.func
+};
+export default function AssetEditor ({className, asset, defaultAsset, children}) {
+	const [values, setValues] = React.useState(null);
+	const [current, setCurrent] = React.useState(null);
+	const editors = React.Children.toArray(children);
 
-	static propTypes = {
-		assetURL: PropTypes.string,
-		aspectRatio: PropTypes.number,
-		format: PropTypes.object,
+	React.useEffect(() => {
+		async function loadAsset () {
+			const toLoad = asset || defaultAsset;
+			const didChange = () => toLoad !== (asset || defaultAsset);
 
-		onSave: PropTypes.func,
-		onCancel: PropTypes.func,
+			try {
+				const service = await getService();
+				const raw = await service.get({url: toLoad, headers: null});
 
-		loading: PropTypes.bool,
-		saving: PropTypes.bool,
-		save: PropTypes.func
-	}
+				if (didChange()) { return; }
 
-	onSubmit = (e) => {
-		e.preventDefault();
-		e.stopPropagation();
+				const initialValues = {};
+				let initialType = null;
 
-		const {save} = this.props;
+				for (let editor of editors.reverse()) {
+					const id = getIDForEditor(editor);
+					const original = getStateForEditor(editor, toLoad, raw);
 
-		if (save) {
-			save();
+					if (original) {
+						initialValues[id] = original;
+						initialType = id;
+						break;
+					}
+				}
+
+				setValues(initialValues);
+				setCurrent(initialType);
+			} catch (e) {
+				if (didChange()) { return; }
+				setValues(e);
+			}
 		}
-	}
 
+		loadAsset();
+	}, [asset || defaultAsset]);
 
-	render () {
-		const {loading} = this.props;
-
-		return (
-			<div className={cx('community-asset-editor')}>
-				<Loading.Placeholder loading={loading} fallback={(<Loading.Spinner />)}>
-					<div className={cx('navigation')}>
-						<TypeSwitcher />
-					</div>
-					<form className={cx('body')} onSubmit={this.onSubmit}>
-						<EditorBody />
-						<Controls />
-					</form>
-				</Loading.Placeholder>
-			</div>
-		);
-	}
+	return (
+		<div className={cx('asset-editor', className)}>
+			<Loading.Placeholder loading={!values} fallback={(<Loading.Spinner />)}>
+				<div className={cx('navigation')}>
+					<TypeSwitcher editors={editors} current={current} setCurrent={setCurrent} />
+				</div>
+				<form className={cx('body')}>
+					<EditorBody values={values} current={current} editors={editors} />
+				</form>
+			</Loading.Placeholder>
+		</div>
+	);
 }
