@@ -1,6 +1,8 @@
 import React from 'react';
-import {scoped} from '@nti/lib-locale';
+import PropTypes from 'prop-types';
 import classnames from 'classnames/bind';
+import {Color} from '@nti/lib-commons';
+import {scoped} from '@nti/lib-locale';
 
 import * as SolidColorImage from '../../../solid-color-image';
 import TypeButton from '../../components/TypeButton';
@@ -12,6 +14,10 @@ const cx = classnames.bind(Styles);
 const t = scoped('nti-web-whiteboard.asset-editor.types.solid-color.View', {
 	name: 'Solid'
 });
+
+const DefaultColor = {
+	color: Color.fromHex('#3fb3f6')
+};
 
 function Button (props) {
 	return (
@@ -32,10 +38,25 @@ AssetSolidColorEditor.getStateForAsset = (url, raw) => {
 
 	if (!original) { return null;}
 };
-export default function AssetSolidColorEditor () {
+AssetSolidColorEditor.propTypes = {
+	value: PropTypes.shape({
+		original: PropTypes.object,
+		updated: PropTypes.object
+	}),
+	format: PropTypes.object,
+	onChange: PropTypes.object
+};
+export default function AssetSolidColorEditor ({value, format, onChange}) {
+	const {updated, original} = value || {};
+
+	const onUpdate = (state) => {
+		onChange({
+			...value,
+			updated: state
+		});
+	};
+
 	return (
-		<div>
-			Solid Color Editor
-		</div>
+		<SolidColorImage.Editor value={updated || original || DefaultColor} onChange={onUpdate} />
 	);
 }
