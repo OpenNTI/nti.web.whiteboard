@@ -45,7 +45,7 @@ AssetSolidColorEditor.getStateForAsset = (url, raw) => {
 		updated: null
 	};
 };
-AssetSolidColorEditor.getPayload = async ({updated}, {aspectRatio}) => {
+AssetSolidColorEditor.getPayload = ({updated}, {aspectRatio}) => {
 	const svg = SolidColorImage.getSVGFromSolidColorState(updated, aspectRatio);
 	const blob = getSVGBlob(svg);
 

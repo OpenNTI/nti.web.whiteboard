@@ -6,6 +6,7 @@ import {scoped} from '@nti/lib-locale';
 
 import * as LinearGradientImage from '../../../linear-gradient-image';
 import TypeButton from '../../components/TypeButton';
+import {getSVGBlob} from '../utils';
 
 import Styles from './View.css';
 
@@ -15,6 +16,7 @@ const t = scoped('nti-web-whiteboard.asset-editor.types.linear-gradient.View', {
 	name: 'Gradient'
 });
 
+const FileName = 'background.svg';
 const DefaultGradient = {
 	rotation: '-45',
 	stops: [
@@ -46,6 +48,13 @@ AssetLinearGradientEditor.getStateForAsset = (url, raw) => {
 		original,
 		updated: null
 	};
+};
+AssetLinearGradientEditor.getPayload = ({updated}, {aspectRatio}) => {
+	const svg = LinearGradientImage.getGradientObjectToSVG(updated, aspectRatio);
+	const blob = getSVGBlob(svg);
+
+	blob.name = FileName;
+	return blob;
 };
 AssetLinearGradientEditor.propTypes = {
 	value: PropTypes.shape({
