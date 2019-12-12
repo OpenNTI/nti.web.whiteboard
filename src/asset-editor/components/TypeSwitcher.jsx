@@ -11,7 +11,7 @@ const cx = classnames.bind(Styles);
 AssetEditorTypeSwitcher.propTypes = {
 	editors: PropTypes.array,
 	current: PropTypes.string,
-	setCurrent: PropTypes.string
+	setCurrent: PropTypes.func
 };
 export default function AssetEditorTypeSwitcher ({editors, current, setCurrent}) {
 	return (
