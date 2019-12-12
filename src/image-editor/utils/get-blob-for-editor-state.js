@@ -6,6 +6,9 @@ export default function getBlobForEditorState (editorState) {
 	if (!canvas) { return Promise.reject(); }
 
 	return new Promise((fulfill) => {
-		canvas.toBlob((blob) => fulfill(blob));
+		canvas.toBlob((blob) => {
+			blob.name = editorState.filename;
+			fulfill(blob);
+		});
 	});
 }

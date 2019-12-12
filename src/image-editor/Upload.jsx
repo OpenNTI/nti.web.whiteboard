@@ -79,7 +79,7 @@ export default class Upload extends React.Component {
 					this.setState({loading: false, error: null});
 
 					if (onChange) {
-						onChange(img);
+						onChange(img, file.name);
 					}
 				};
 

@@ -36,6 +36,11 @@ AssetImageEditor.getStateForAsset = (url) => {
 		updated: null
 	};
 };
+AssetImageEditor.getPayload = async ({updated}) => {
+	const blob = await ImageEditor.getBlobForEditorState(updated);
+
+	return blob;
+};
 AssetImageEditor.propTypes = {
 	value: PropTypes.shape({
 		original: PropTypes.string,

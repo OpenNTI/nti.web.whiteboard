@@ -108,7 +108,7 @@ export default class ImageEditor extends React.Component {
 	onChange () {
 		const {onChange} = this.props;
 
-		let {formatting, layout, image} = this.currentState;
+		let {formatting, layout, image, filename} = this.currentState;
 
 		// for (let tool of TOOLS) {
 		// 	if (tool.output && tool.output.fixFormatting) {
@@ -117,7 +117,7 @@ export default class ImageEditor extends React.Component {
 		// }
 
 		if (onChange) {
-			onChange({formatting, layout, image});
+			onChange({formatting, layout, image, filename});
 		}
 	}
 
@@ -212,11 +212,12 @@ export default class ImageEditor extends React.Component {
 	}
 
 
-	onImgChange = (image) => {
+	onImgChange = (image, filename) => {
 		const layout = getLayoutFor(image, this.size, CANVAS_PADDING);
 
 		this.setEditorState({
 			image,
+			filename,
 			formatting: this.fixFormatting(this.currentFormatting, layout),
 			layout
 		});
