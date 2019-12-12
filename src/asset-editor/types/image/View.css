@@ -5,3 +5,40 @@
 .image-icon-active {
 	background-image: url('./assets/image-active.svg');
 }
+
+.image-editor {
+	position: relative;
+}
+
+.image-container {
+	width: 100%;
+}
+
+.image {
+	width: 100%;
+}
+
+
+.change-asset:global(.nti-button) {
+	position: absolute;
+	top: 1rem; bottom: auto;
+	left: auto; right: 1rem;
+	padding: 6px 12px;
+	background-color: rgba(51, 51, 51, 0.92);
+	border-radius: 2rem;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
+
+.change-asset i {
+	opacity: 0.4;
+	margin-right: 0.5rem;
+	font-size: 1.125rem;
+}
+
+.change-asset .change {
+	font-size: 0.875rem;
+	font-weight: 600;
+	line-height: 1.3;
+}

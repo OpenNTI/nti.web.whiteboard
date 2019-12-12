@@ -75,7 +75,7 @@ export default function AssetEditor ({className, asset, defaultAsset, children})
 					<TypeSwitcher editors={editors} current={current} setCurrent={setCurrent} />
 				</div>
 				<form className={cx('body')}>
-					<EditorBody values={values} current={current} editors={editors} />
+					<EditorBody values={values} current={current} editors={editors} setValues={setValues} />
 				</form>
 			</Loading.Placeholder>
 		</div>

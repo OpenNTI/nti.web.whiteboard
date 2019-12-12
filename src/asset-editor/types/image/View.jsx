@@ -1,7 +1,10 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {scoped} from '@nti/lib-locale';
 import classnames from 'classnames/bind';
+import {Button, Image, Text} from '@nti/web-commons';
 
+import * as ImageEditor from '../../../image-editor';
 import TypeButton from '../../components/TypeButton';
 
 import Styles from './View.css';
@@ -9,10 +12,11 @@ import Styles from './View.css';
 const ID = 'image';
 const cx = classnames.bind(Styles);
 const t = scoped('nti-web-whiteboard.asset-editor.types.image.View', {
-	name: 'Image'
+	name: 'Image',
+	change: 'Change'
 });
 
-function Button (props) {
+function EditButton (props) {
 	return (
 		<TypeButton
 			{...props}
@@ -25,17 +29,65 @@ function Button (props) {
 }
 
 AssetImageEditor.id = ID;
-AssetImageEditor.Button = Button;
+AssetImageEditor.Button = EditButton;
 AssetImageEditor.getStateForAsset = (url) => {
 	return {
 		original: url,
 		updated: null
 	};
 };
-export default function AssetImageEditor () {
+AssetImageEditor.propTypes = {
+	value: PropTypes.shape({
+		original: PropTypes.string,
+		updated: PropTypes.object
+	}),
+	onChange: PropTypes.func,
+	format: PropTypes.object
+};
+export default function AssetImageEditor ({value, onChange, format}) {
+	const {original, updated} = value || {};
+	const aspectRatio = format?.crop?.aspectRatio;
+
+	const startUpdate = () => {
+		onChange({
+			...value,
+			updated: ImageEditor.getEditorState(null, format)
+		});
+	};
+
+	const onUpdate = (editorState) => {
+		onChange({
+			...value,
+			updated: editorState
+		});
+	};
+
+
 	return (
-		<div>
-			Asset Image Editor
+		<div className={cx('image-editor')}>
+			{!updated && (
+				<Image.Container aspectRatio={aspectRatio} className={cx('image-container')}>
+					<Image src={original} className={cx('image')} />
+				</Image.Container>
+			)}
+			{!updated && (
+				<Button className={cx('change-asset')} onClick={startUpdate}>
+					<i className={cx('icon-image')} />
+					<Text.Base className={cx('change')}>{t('change')}</Text.Base>
+				</Button>
+			)}
+			{updated && (
+				<div className={cx('image-editor-wrapper')}>
+					<ImageEditor.Editor
+						editorState={updated}
+						onChange={onUpdate}
+						allowedControls={[
+							ImageEditor.Editor.Controls.Blur,
+							ImageEditor.Editor.Controls.Darken
+						]}
+					/>
+				</div>
+			)}
 		</div>
 	);
 }

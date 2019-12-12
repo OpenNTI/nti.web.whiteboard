@@ -13,16 +13,19 @@ AssetEditorBody.propTypes = {
 	current: PropTypes.string,
 	editors: PropTypes.array,
 	values: PropTypes.object,
-	setValue: PropTypes.func
+	setValues: PropTypes.func
 };
-export default function AssetEditorBody ({current, editors, values, setValue}) {
+export default function AssetEditorBody ({current, editors, values, setValues}) {
 	const isError = values instanceof Error;
 	const error = isError ? values : null;
 	const Editor = current && getEditorByID(editors, current);
 
 	const onChange = (value) => {
-		if (setValue) {
-			setValue(current, value);
+		if (setValues) {
+			setValues({
+				...values,
+				[current]: value
+			});
 		}
 	};
 
