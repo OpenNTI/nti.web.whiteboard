@@ -104,7 +104,6 @@ export default class Upload extends React.Component {
 	handleDragOver = (e) => (e.stopPropagation(), e.preventDefault())
 	onDrop = (e) => {
 		e.preventDefault();
-		e.stopPropagation();
 
 		const {dataTransfer} = e.nativeEvent;
 		const files = dataTransfer && dataTransfer.files;
