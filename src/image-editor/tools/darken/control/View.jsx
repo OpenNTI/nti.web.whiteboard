@@ -59,7 +59,7 @@ export default function DarkenControl ({editorState, setEditorState}) {
 	};
 
 	const onColorChange = (value) => {
-		setEditorState(setDarkenColor(editorState, value.hex.toString()));
+		setEditorState(setDarkenColor(editorState, value));
 	};
 
 	return (
