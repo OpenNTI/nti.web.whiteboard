@@ -52,6 +52,9 @@ AssetImageEditor.propTypes = {
 export default function AssetImageEditor ({value, onChange, format}) {
 	const {original, updated} = value || {};
 	const aspectRatio = format?.crop?.aspectRatio;
+	const empty = !original;
+
+	const editorState = updated || (empty ? ImageEditor.getEditorState(null, format) : null);
 
 	const startUpdate = () => {
 		onChange({
@@ -70,21 +73,21 @@ export default function AssetImageEditor ({value, onChange, format}) {
 
 	return (
 		<div className={cx('image-editor')}>
-			{!updated && (
+			{!editorState && (
 				<Image.Container aspectRatio={aspectRatio} className={cx('image-container')}>
 					<Image src={original} className={cx('image')} />
 				</Image.Container>
 			)}
-			{!updated && (
+			{!editorState && (
 				<Button className={cx('change-asset')} onClick={startUpdate}>
 					<i className={cx('icon-image')} />
 					<Text.Base className={cx('change')}>{t('change')}</Text.Base>
 				</Button>
 			)}
-			{updated && (
+			{editorState && (
 				<div className={cx('image-editor-wrapper')}>
 					<ImageEditor.Editor
-						editorState={updated}
+						editorState={editorState}
 						onChange={onUpdate}
 						allowedControls={[
 							ImageEditor.Editor.Controls.Blur,

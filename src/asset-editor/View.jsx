@@ -43,7 +43,7 @@ export default function AssetEditor ({className, asset, defaultAsset, children, 
 
 			try {
 				const service = await getService();
-				const raw = await service.get({url: toLoad, headers: null});
+				const raw = toLoad ? await service.get({url: toLoad, headers: null}) : null;
 
 				if (didChange()) { return; }
 
