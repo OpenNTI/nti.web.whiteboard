@@ -8,6 +8,7 @@ export default {
 			return {
 				image: {
 					src: layout.image.src,
+					scale: layout.image.scale,
 					x: 0,
 					y: 0,
 					width: layout.image.width,
@@ -24,6 +25,7 @@ export default {
 		return {
 			image: {
 				src: layout.image.src,
+				scale: layout.image.scale,
 				x: -crop.x,
 				y: -crop.y,
 				width: layout.image.width,

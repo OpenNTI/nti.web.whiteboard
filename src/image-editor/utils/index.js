@@ -39,6 +39,7 @@ export function getLayoutFor (img, size) {
 	return {
 		image: {
 			src: img,
+			scale,
 			x, y,
 			width: imgSize.width,
 			height: imgSize.height

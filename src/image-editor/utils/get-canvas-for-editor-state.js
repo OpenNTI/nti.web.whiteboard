@@ -2,6 +2,26 @@ import {Crop, Rotate, Blur, Darken} from '../tools';
 
 const TOOLS = [Crop, Rotate, Darken,  Blur];
 
+function scaleLayout (layout) {
+	const imgScale = layout.image.scale ?? 1;
+	const scale = x => x * imgScale;
+
+	return {
+		image: {
+			...layout.image,
+			x: scale(layout.image.x),
+			y: scale(layout.image.y),
+			width: scale(layout.image.width),
+			height: scale(layout.image.height)
+		},
+		canvas: {
+			...layout.canvas,
+			width: scale(layout.canvas.width),
+			height: scale(layout.canvas.height)
+		}
+	};
+}
+
 export default function getCanvasForEditorState (editorState) {
 	const canvas = document.createElement('canvas');
 	const ctx = canvas.getContext('2d');
@@ -13,6 +33,7 @@ export default function getCanvasForEditorState (editorState) {
 	let outputLayout = layout || {
 		image: {
 			src: image,
+			scale: 1,
 			x: 0, y: 0,
 			width: image ? image.width : 0,
 			height: image ? image.height : 0
@@ -29,6 +50,8 @@ export default function getCanvasForEditorState (editorState) {
 			outputLayout = tool.output.fixLayout(formatting, outputLayout);
 		}
 	}
+
+	outputLayout = scaleLayout(outputLayout);
 
 	canvas.width = outputLayout.canvas.width;
 	canvas.height = outputLayout.canvas.height;
