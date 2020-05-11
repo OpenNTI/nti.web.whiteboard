@@ -1,6 +1,6 @@
 import {Crop, Rotate, Blur, Darken} from '../tools';
 
-const TOOLS = [Crop, Rotate, Darken,  Blur];
+const TOOLS = [Crop, Rotate, Darken, Blur];
 
 function scaleLayout (layout) {
 	const imgScale = layout.image.scale ?? 1;
@@ -61,7 +61,7 @@ export default function getCanvasForEditorState (editorState) {
 
 	for (let tool of TOOLS) {
 		if (tool.output && tool.output.before) {
-			tool.output.before(ctx, formatting, outputLayout);
+			tool.output.before(ctx, formatting, outputLayout, canvas);
 		}
 	}
 
@@ -77,7 +77,7 @@ export default function getCanvasForEditorState (editorState) {
 
 	for (let tool of TOOLS) {
 		if (tool.output && tool.output.after) {
-			tool.output.after(ctx, formatting, outputLayout);
+			tool.output.after(ctx, formatting, outputLayout, canvas);
 		}
 	}
 

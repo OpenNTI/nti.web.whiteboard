@@ -1,4 +1,4 @@
-import StackBlur from 'stackblur-canvas';
+import * as StackBlur from 'stackblur-canvas';
 
 function getHashFor (blur, layout) {
 	const fileID = layout.image.src.getAttribute('data-file-id') || 'img';
