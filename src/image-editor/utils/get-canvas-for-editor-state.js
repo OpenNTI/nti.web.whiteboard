@@ -3,7 +3,7 @@ import {Crop, Rotate, Blur, Darken} from '../tools';
 const TOOLS = [Crop, Rotate, Darken, Blur];
 
 function scaleLayout (layout) {
-	const imgScale = layout.image.scale ?? 1;
+	const imgScale = Math.max(layout.image.scale ?? 1, 1);
 	const scale = x => x * imgScale;
 
 	return {
