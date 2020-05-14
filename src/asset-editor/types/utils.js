@@ -13,7 +13,7 @@ export function getPayloadForEditor (editor, value) {
 export function getHasUpdateForEditor (editor, value) {
 	if (editor?.type?.hasUpdate) { return editor.type.hasUpdate(value); }
 
-	return Boolean(value.updated);
+	return Boolean(value?.updated);
 }
 
 export function getIDForEditor (editor) {
