@@ -30,6 +30,7 @@ function EditButton (props) {
 
 AssetImageEditor.id = ID;
 AssetImageEditor.Button = EditButton;
+AssetImageEditor.hasUpdate = (value) => Boolean(value?.updated?.image);
 AssetImageEditor.getStateForAsset = (url) => {
 	return {
 		original: url,

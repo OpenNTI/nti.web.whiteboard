@@ -10,6 +10,12 @@ export function getPayloadForEditor (editor, value) {
 	return editor.type.getPayload(value, getFormatForEditor(editor));
 }
 
+export function getHasUpdateForEditor (editor, value) {
+	if (editor?.type?.hasUpdate) { return editor.type.hasUpdate(value); }
+
+	return Boolean(value.updated);
+}
+
 export function getIDForEditor (editor) {
 	return editor.type.id;
 }
@@ -17,6 +23,7 @@ export function getIDForEditor (editor) {
 export function getButtonForEditor (editor) {
 	return editor.type.Button;
 }
+
 
 export function getEditorByID (editors, id) {
 	for (let editor of editors) {

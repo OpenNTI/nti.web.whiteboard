@@ -34,6 +34,8 @@ export default function AssetEditor ({className, asset, defaultAsset, children, 
 	const [saving, setSaving] = React.useState(false);
 	const [savingError, setSavingError] = React.useState(null);
 
+	const hasUpdated = values && values[current] && values[current].updated;
+
 	const editors = React.Children.toArray(children);
 
 	React.useEffect(() => {
@@ -76,6 +78,8 @@ export default function AssetEditor ({className, asset, defaultAsset, children, 
 		e.preventDefault();
 		e.stopPropagation();
 
+		if (!hasUpdated || saving) { return; }
+
 		const editor = getEditorByID(editors, current);
 		const value = values[current];
 
@@ -107,7 +111,7 @@ export default function AssetEditor ({className, asset, defaultAsset, children, 
 						savingError={savingError}
 						setSavingError={setSavingError}
 					/>
-					<Controls values={values} current={current} saving={saving} cancel={onCancel} />
+					<Controls values={values} current={current} saving={saving} cancel={onCancel} editors={editors} />
 				</form>
 			</Loading.Placeholder>
 		</div>
