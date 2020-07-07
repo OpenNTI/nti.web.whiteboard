@@ -1,5 +1,8 @@
 # Video component, for ReactJS
 
+![Build Status](https://github.com/NextThought/nti.web.whiteboard/workflows/Project%20Health/badge.svg)
+
+
 
 
 ##### File naming conventions:
