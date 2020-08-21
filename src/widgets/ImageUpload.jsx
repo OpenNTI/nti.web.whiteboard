@@ -1,3 +1,4 @@
+import './ImageUpload.scss';
 import React from 'react';
 import PropTypes from 'prop-types';
 import {RemoveButton} from '@nti/web-commons';
