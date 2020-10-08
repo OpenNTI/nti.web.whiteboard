@@ -30,13 +30,13 @@
 		i {
 			margin-top: 2rem;
 			font-size: 2rem;
-			color: $secondary-grey;
+			color: var(--secondary-grey);
 			flex: 1 1 auto;
 		}
 
 		.title {
 			font-size: 1.125rem;
-			color: $secondary-grey;
+			color: var(--secondary-grey);
 			flex: 0 0 auto;
 			margin: 1rem 0;
 		}
@@ -53,7 +53,7 @@
 				border-radius: 4px;
 				line-height: 2.5rem;
 				font-size: 0.875rem;
-				color: $secondary-grey;
+				color: var(--secondary-grey);
 			}
 		}
 
