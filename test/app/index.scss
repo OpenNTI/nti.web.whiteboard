@@ -1,12 +1,12 @@
 @import '~@nti/style-common/all.scss';
 
 body {
-	font: normal 400 0.9em/2.8em "Open Sans", sans-serif;
+	font: normal 400 0.9em/2.8em var(--body-font-family);
 }
 
 .launch {
 	color: white;
-	background-color: #3fb3f6;
+	background-color: var(--primary-blue);
 	padding: 2px;
 	cursor: pointer;
 	border-radius: 2px;
