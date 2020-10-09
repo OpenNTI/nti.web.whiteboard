@@ -1,7 +1,7 @@
 @import '~@nti/style-common/all.scss';
 
 body {
-	font: normal 400 0.9em/2.8em "Open Sans", sans-serif;
+	font: normal 400 0.9em/2.8em var(--body-font-family);
 }
 
 .launch {
