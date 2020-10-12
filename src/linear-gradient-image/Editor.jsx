@@ -1,12 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import classnames from 'classnames/bind';
+import cx from 'classnames';
 
-import Styles from './Editor.css';
 import Preview from './components/Preview';
 import Stop from './components/Stop';
-
-const cx = classnames.bind(Styles);
 
 export default class LinearGradientEditor extends React.Component {
 
