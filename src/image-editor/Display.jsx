@@ -28,13 +28,15 @@ export default class ImageEditorDisplay extends React.Component {
 		this.draw();
 	}
 
-	componentWillReceiveProps (newProps) {
-		const {editorState:newState} = newProps;
-		const {editorState:oldState} = this.props;
+	componentDidUpdate (prevProps) {
+		const {editorState:newState} = this.props;
+		const {editorState:oldState} = prevProps;
 
 		if (newState !== oldState) {
 			this.setupInitialState(newState);
 		}
+
+		this.draw();
 	}
 
 	componentDidMount () {
@@ -44,10 +46,6 @@ export default class ImageEditorDisplay extends React.Component {
 		if (editorState) {
 			this.setupInitialState(editorState);
 		}
-	}
-
-	componentDidUpdate (prevProps, prevState) {
-		this.draw();
 	}
 
 	get size () {
