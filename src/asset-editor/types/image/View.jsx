@@ -64,10 +64,10 @@ export default function AssetImageEditor ({value, onChange, format}) {
 		});
 	};
 
-	const onUpdate = (editorState) => {
+	const onUpdate = (updatedEditorState) => {
 		onChange({
 			...value,
-			updated: editorState
+			updated: updatedEditorState
 		});
 	};
 
