@@ -24,7 +24,7 @@ export default class LinearGradientInput extends Component {
 		currentStop: null,
 	}
 
-	gradient(stops) {
+	gradient (stops) {
 		return {
 			WebkitAppearance: 'none',
 			backgroundImage: `linear-gradient(to right, ${stops[0].stopcolor}, ${stops[1].stopcolor}`,
@@ -43,7 +43,7 @@ export default class LinearGradientInput extends Component {
 		console.log(stop.stopcolor);
 	}
 
-	render() {
+	render () {
 
 		const stops = this.props.stops || defaultColors;
 
