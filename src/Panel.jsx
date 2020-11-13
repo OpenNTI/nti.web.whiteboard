@@ -36,8 +36,10 @@ export default class WhiteboardPanel extends React.Component {
 	}
 
 
-	componentDidUpdate () {
-		this.updateRender(this.props.scene);
+	componentDidUpdate ({scene}) {
+		if (this.props.scene !== scene) {
+			this.updateRender(this.props.scene);
+		}
 	}
 
 
