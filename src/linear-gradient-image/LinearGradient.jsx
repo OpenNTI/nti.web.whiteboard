@@ -7,8 +7,8 @@ import style from './LinearGradient.css';
 const { Color } = Input;
 
 const defaultColors = [
-	{ stopcolor: '#ffffff' },
-	{ stopcolor: '#000000' },
+	{ stopColor: '#ffffff' },
+	{ stopColor: '#000000' },
 ];
 
 export default class LinearGradientInput extends Component {
@@ -17,7 +17,10 @@ export default class LinearGradientInput extends Component {
 		value: PropTypes.shape({
 			color: PropTypes.object
 		}),
-		onChange: PropTypes.func
+		onChange: PropTypes.func,
+		stops: PropTypes.arrayOf(PropTypes.shape({
+			stopColor: PropTypes.any
+		}))
 	}
 
 	state = {
@@ -27,7 +30,7 @@ export default class LinearGradientInput extends Component {
 	gradient (stops) {
 		return {
 			WebkitAppearance: 'none',
-			backgroundImage: `linear-gradient(to right, ${stops[0].stopcolor}, ${stops[1].stopcolor}`,
+			backgroundImage: `linear-gradient(to right, ${stops[0].stopColor}, ${stops[1].stopColor}`,
 			width: '100vm',
 			height: '14px',
 			borderRadius: '30px',
@@ -40,7 +43,7 @@ export default class LinearGradientInput extends Component {
 
 	onClick = (stop) => {
 		this.setState({currentStop: stop});
-		console.log(stop.stopcolor);
+		// console.log(stop.stopColor);
 	}
 
 	render () {
