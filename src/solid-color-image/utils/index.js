@@ -1,2 +1,2 @@
-export getSolidColorStateFromSVG from './get-solid-color-state-from-svg';
-export getSVGFromSolidColorState from './get-svg-from-solid-color-state';
+export { default as getSolidColorStateFromSVG } from './get-solid-color-state-from-svg';
+export { default as getSVGFromSolidColorState } from './get-svg-from-solid-color-state';

@@ -1,2 +1,2 @@
-export getGradientObjectToSVG from './gradient-object-to-svg';
-export getSVGToGradientObject from './svg-to-gradient-object';
+export { default as getGradientObjectToSVG } from './gradient-object-to-svg';
+export { default as getSVGToGradientObject } from './svg-to-gradient-object';

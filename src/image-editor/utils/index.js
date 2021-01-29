@@ -1,7 +1,7 @@
-export getBlobForEditorState from './get-blob-for-editor-state';
-export getDataURLForEditorState from './get-data-url-for-editor-state';
-export getEditorState from './get-editor-state';
-export getImageForEditorState from './get-image-for-editor-state';
+export { default as getBlobForEditorState } from './get-blob-for-editor-state';
+export { default as getDataURLForEditorState } from './get-data-url-for-editor-state';
+export { default as getEditorState } from './get-editor-state';
+export { default as getImageForEditorState } from './get-image-for-editor-state';
 
 export function getImgSrc (file) {
 	return new Promise(function (fulfill, reject) {
