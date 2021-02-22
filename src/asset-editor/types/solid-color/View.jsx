@@ -1,27 +1,27 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames/bind';
-import {Color} from '@nti/lib-commons';
-import {scoped} from '@nti/lib-locale';
+import { Color } from '@nti/lib-commons';
+import { scoped } from '@nti/lib-locale';
 
 import * as SolidColorImage from '../../../solid-color-image';
 import TypeButton from '../../components/TypeButton';
-import {getSVGBlob} from '../utils';
+import { getSVGBlob } from '../utils';
 
 import Styles from './View.css';
 
 const ID = 'solid-color';
 const cx = classnames.bind(Styles);
 const t = scoped('nti-web-whiteboard.asset-editor.types.solid-color.View', {
-	name: 'Solid'
+	name: 'Solid',
 });
 
 const FileName = 'background.svg';
 const DefaultColor = {
-	color: Color.fromHex('#3fb3f6')
+	color: Color.fromHex('#3fb3f6'),
 };
 
-function Button (props) {
+function Button(props) {
 	return (
 		<TypeButton
 			{...props}
@@ -38,14 +38,16 @@ AssetSolidColorEditor.Button = Button;
 AssetSolidColorEditor.getStateForAsset = (url, raw) => {
 	const original = SolidColorImage.getSolidColorStateFromSVG(raw);
 
-	if (!original) { return null; }
+	if (!original) {
+		return null;
+	}
 
 	return {
 		original,
-		updated: null
+		updated: null,
 	};
 };
-AssetSolidColorEditor.getPayload = ({updated}, {aspectRatio}) => {
+AssetSolidColorEditor.getPayload = ({ updated }, { aspectRatio }) => {
 	const svg = SolidColorImage.getSVGFromSolidColorState(updated, aspectRatio);
 	const blob = getSVGBlob(svg);
 
@@ -55,22 +57,25 @@ AssetSolidColorEditor.getPayload = ({updated}, {aspectRatio}) => {
 AssetSolidColorEditor.propTypes = {
 	value: PropTypes.shape({
 		original: PropTypes.object,
-		updated: PropTypes.object
+		updated: PropTypes.object,
 	}),
 	format: PropTypes.object,
-	onChange: PropTypes.func
+	onChange: PropTypes.func,
 };
-export default function AssetSolidColorEditor ({value, format, onChange}) {
-	const {updated, original} = value || {};
+export default function AssetSolidColorEditor({ value, format, onChange }) {
+	const { updated, original } = value || {};
 
-	const onUpdate = (state) => {
+	const onUpdate = state => {
 		onChange({
 			...value,
-			updated: state
+			updated: state,
 		});
 	};
 
 	return (
-		<SolidColorImage.Editor value={updated || original || DefaultColor} onChange={onUpdate} />
+		<SolidColorImage.Editor
+			value={updated || original || DefaultColor}
+			onChange={onUpdate}
+		/>
 	);
 }

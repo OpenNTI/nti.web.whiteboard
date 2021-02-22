@@ -6,28 +6,26 @@ import style from './LinearGradient.css';
 
 const { Color } = Input;
 
-const defaultColors = [
-	{ stopColor: '#ffffff' },
-	{ stopColor: '#000000' },
-];
+const defaultColors = [{ stopColor: '#ffffff' }, { stopColor: '#000000' }];
 
 export default class LinearGradientInput extends Component {
-
 	static propTypes = {
 		value: PropTypes.shape({
-			color: PropTypes.object
+			color: PropTypes.object,
 		}),
 		onChange: PropTypes.func,
-		stops: PropTypes.arrayOf(PropTypes.shape({
-			stopColor: PropTypes.any
-		}))
-	}
+		stops: PropTypes.arrayOf(
+			PropTypes.shape({
+				stopColor: PropTypes.any,
+			})
+		),
+	};
 
 	state = {
 		currentStop: null,
-	}
+	};
 
-	gradient (stops) {
+	gradient(stops) {
 		return {
 			WebkitAppearance: 'none',
 			backgroundImage: `linear-gradient(to right, ${stops[0].stopColor}, ${stops[1].stopColor}`,
@@ -41,13 +39,12 @@ export default class LinearGradientInput extends Component {
 		};
 	}
 
-	onClick = (stop) => {
-		this.setState({currentStop: stop});
+	onClick = stop => {
+		this.setState({ currentStop: stop });
 		// console.log(stop.stopColor);
-	}
+	};
 
-	render () {
-
+	render() {
 		const stops = this.props.stops || defaultColors;
 
 		return (

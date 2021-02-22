@@ -1,11 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames/bind';
-import {getService} from '@nti/web-client';
-import {Loading} from '@nti/web-commons';
+import { getService } from '@nti/web-client';
+import { Loading } from '@nti/web-commons';
 
 import Styles from './View.css';
-import {getStateForEditor, getIDForEditor, getEditorByID, getPayloadForEditor} from './types';
+import {
+	getStateForEditor,
+	getIDForEditor,
+	getEditorByID,
+	getPayloadForEditor,
+} from './types';
 import Image from './types/image';
 import LinearGradient from './types/linear-gradient';
 import SolidColor from './types/solid-color';
@@ -26,9 +31,16 @@ AssetEditor.propTypes = {
 	defaultAsset: PropTypes.string,
 
 	onSave: PropTypes.func,
-	onCancel: PropTypes.func
+	onCancel: PropTypes.func,
 };
-export default function AssetEditor ({className, asset, defaultAsset, children, onSave, onCancel}) {
+export default function AssetEditor({
+	className,
+	asset,
+	defaultAsset,
+	children,
+	onSave,
+	onCancel,
+}) {
 	const [values, setValues] = React.useState(null);
 	const [current, setCurrent] = React.useState(null);
 	const [saving, setSaving] = React.useState(false);
@@ -39,15 +51,19 @@ export default function AssetEditor ({className, asset, defaultAsset, children, 
 	const editors = React.Children.toArray(children);
 
 	React.useEffect(() => {
-		async function loadAsset () {
+		async function loadAsset() {
 			const toLoad = asset || defaultAsset;
 			const didChange = () => toLoad !== (asset || defaultAsset);
 
 			try {
 				const service = await getService();
-				const raw = toLoad ? await service.get({url: toLoad, headers: null}) : null;
+				const raw = toLoad
+					? await service.get({ url: toLoad, headers: null })
+					: null;
 
-				if (didChange()) { return; }
+				if (didChange()) {
+					return;
+				}
 
 				const initialValues = {};
 				let initialType = null;
@@ -66,7 +82,9 @@ export default function AssetEditor ({className, asset, defaultAsset, children, 
 				setValues(initialValues);
 				setCurrent(initialType);
 			} catch (e) {
-				if (didChange()) { return; }
+				if (didChange()) {
+					return;
+				}
 				setValues(e);
 			}
 		}
@@ -74,11 +92,13 @@ export default function AssetEditor ({className, asset, defaultAsset, children, 
 		loadAsset();
 	}, [asset || defaultAsset]);
 
-	const onSubmit = async (e) => {
+	const onSubmit = async e => {
 		e.preventDefault();
 		e.stopPropagation();
 
-		if (!hasUpdated || saving) { return; }
+		if (!hasUpdated || saving) {
+			return;
+		}
 
 		const editor = getEditorByID(editors, current);
 		const value = values[current];
@@ -93,14 +113,20 @@ export default function AssetEditor ({className, asset, defaultAsset, children, 
 			setSavingError(err);
 			setSaving(false);
 		}
-
 	};
 
 	return (
 		<div className={cx('asset-editor', className)}>
-			<Loading.Placeholder loading={!values} fallback={(<Loading.Spinner />)}>
+			<Loading.Placeholder
+				loading={!values}
+				fallback={<Loading.Spinner />}
+			>
 				<div className={cx('navigation')}>
-					<TypeSwitcher editors={editors} current={current} setCurrent={setCurrent} />
+					<TypeSwitcher
+						editors={editors}
+						current={current}
+						setCurrent={setCurrent}
+					/>
 				</div>
 				<form className={cx('body')} onSubmit={onSubmit}>
 					<EditorBody
@@ -111,7 +137,13 @@ export default function AssetEditor ({className, asset, defaultAsset, children, 
 						savingError={savingError}
 						setSavingError={setSavingError}
 					/>
-					<Controls values={values} current={current} saving={saving} cancel={onCancel} editors={editors} />
+					<Controls
+						values={values}
+						current={current}
+						saving={saving}
+						cancel={onCancel}
+						editors={editors}
+					/>
 				</form>
 			</Loading.Placeholder>
 		</div>

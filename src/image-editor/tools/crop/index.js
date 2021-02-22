@@ -7,5 +7,5 @@ export default {
 	draw,
 	fixFormatting,
 	output,
-	...handlers
+	...handlers,
 };

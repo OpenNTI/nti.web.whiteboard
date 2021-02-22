@@ -1,16 +1,16 @@
-import {Color} from '@nti/lib-commons';
+import { Color } from '@nti/lib-commons';
 
-import {SVG_IDENTIFIER} from '../Constants';
+import { SVG_IDENTIFIER } from '../Constants';
 
 const RotateRegex = /^rotate\((.*)\)$/;
 
-function getRotationFromTransform (transform) {
+function getRotationFromTransform(transform) {
 	const matches = transform.match(RotateRegex);
 
 	return matches[1];
 }
 
-function getColorSafe (value) {
+function getColorSafe(value) {
 	try {
 		return Color(value);
 	} catch (e) {
@@ -18,9 +18,13 @@ function getColorSafe (value) {
 	}
 }
 
-export default function SvgToGradientObject (svg) {
-	if (!svg) { return null; }
-	if (svg.indexOf(SVG_IDENTIFIER) === -1) { return null; }
+export default function SvgToGradientObject(svg) {
+	if (!svg) {
+		return null;
+	}
+	if (svg.indexOf(SVG_IDENTIFIER) === -1) {
+		return null;
+	}
 
 	const temp = document.createElement('div');
 	temp.innerHTML = svg;
@@ -32,15 +36,15 @@ export default function SvgToGradientObject (svg) {
 
 	//make list of stops and add to json
 	const nodelist = temp.querySelectorAll('stop');
-	const stops = Array.from(nodelist).map((stop) => {
+	const stops = Array.from(nodelist).map(stop => {
 		return {
 			offset: stop.getAttribute('offset'),
-			color: getColorSafe(stop.getAttribute('stop-color'))
+			color: getColorSafe(stop.getAttribute('stop-color')),
 		};
 	});
 
 	return {
 		rotation,
-		stops
+		stops,
 	};
 }

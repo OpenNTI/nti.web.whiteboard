@@ -1,5 +1,6 @@
-export default function getEditorState (image, formatting) {
+export default function getEditorState(image, formatting) {
 	return {
-		image, formatting
+		image,
+		formatting,
 	};
 }

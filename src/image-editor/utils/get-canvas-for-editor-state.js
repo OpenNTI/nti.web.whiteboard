@@ -1,8 +1,8 @@
-import {Crop, Rotate, Blur, Darken} from '../tools';
+import { Crop, Rotate, Blur, Darken } from '../tools';
 
 const TOOLS = [Crop, Rotate, Darken, Blur];
 
-function scaleLayout (layout) {
+function scaleLayout(layout) {
 	const imgScale = Math.max(layout.image.scale ?? 1, 1);
 	const scale = x => x * imgScale;
 
@@ -12,37 +12,40 @@ function scaleLayout (layout) {
 			x: scale(layout.image.x),
 			y: scale(layout.image.y),
 			width: scale(layout.image.width),
-			height: scale(layout.image.height)
+			height: scale(layout.image.height),
 		},
 		canvas: {
 			...layout.canvas,
 			width: scale(layout.canvas.width),
-			height: scale(layout.canvas.height)
-		}
+			height: scale(layout.canvas.height),
+		},
 	};
 }
 
-export default function getCanvasForEditorState (editorState) {
+export default function getCanvasForEditorState(editorState) {
 	const canvas = document.createElement('canvas');
 	const ctx = canvas.getContext('2d');
 
-	const {layout, formatting, image} = editorState;
+	const { layout, formatting, image } = editorState;
 
-	if (!image) { return null; }
+	if (!image) {
+		return null;
+	}
 
 	let outputLayout = layout || {
 		image: {
 			src: image,
 			scale: 1,
-			x: 0, y: 0,
+			x: 0,
+			y: 0,
 			width: image ? image.width : 0,
-			height: image ? image.height : 0
+			height: image ? image.height : 0,
 		},
 		canvas: {
 			padding: 0,
 			width: image ? image.width : 0,
-			height: image ? image.height : 0
-		}
+			height: image ? image.height : 0,
+		},
 	};
 
 	for (let tool of TOOLS) {

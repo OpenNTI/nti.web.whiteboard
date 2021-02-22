@@ -1,10 +1,12 @@
-import {CORNER_RADIUS} from './Constants';
+import { CORNER_RADIUS } from './Constants';
 
 export default {
-	after (ctx, formatting, layout, getLayerFor) {
-		const {crop} = formatting || {};
+	after(ctx, formatting, layout, getLayerFor) {
+		const { crop } = formatting || {};
 
-		if (!crop) { return; }
+		if (!crop) {
+			return;
+		}
 
 		const layer = getLayerFor('crop');
 		const layerCtx = layer.getContext('2d');
@@ -18,7 +20,12 @@ export default {
 
 		layerCtx.save();
 		layerCtx.fillStyle = 'rgba(0,0,0,0.7)';
-		layerCtx.fillRect(layout.image.x, layout.image.y, layout.image.width, layout.image.height);
+		layerCtx.fillRect(
+			layout.image.x,
+			layout.image.y,
+			layout.image.width,
+			layout.image.height
+		);
 		layerCtx.restore();
 
 		layerCtx.save();
@@ -42,13 +49,15 @@ export default {
 		ctx.globalCompositeOperation = 'source-over';
 		ctx.globalAlpha = 1;
 
-		function nib (x, y, noStroke) {
+		function nib(x, y, noStroke) {
 			ctx.beginPath();
 
 			ctx.arc(x, y, CORNER_RADIUS, 0, Math.PI * 2);
 			// ctx.endPath();
 			ctx.fill();
-			if (!noStroke) { ctx.stroke(); }
+			if (!noStroke) {
+				ctx.stroke();
+			}
 		}
 
 		ctx.save();
@@ -63,17 +72,14 @@ export default {
 		nib(crop.x, crop.y + crop.height, true);
 		ctx.restore();
 
-
 		nib(crop.x, crop.y);
 		nib(crop.x + crop.width, crop.y);
 		nib(crop.x + crop.width, crop.y + crop.height);
 		nib(crop.x, crop.y + crop.height);
 
 		ctx.restore();
-
-	}
+	},
 };
-
 
 // const {crop} = formatting || {};
 

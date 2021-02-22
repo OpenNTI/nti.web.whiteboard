@@ -1,16 +1,17 @@
-export default function fixCropFormatting (formatting, layout) {
-	const {crop} = formatting;
+export default function fixCropFormatting(formatting, layout) {
+	const { crop } = formatting;
 
-	if (!crop) { return formatting; }
+	if (!crop) {
+		return formatting;
+	}
 
-	let {aspectRatio, width, height, x = 0, y = 0} = crop;
+	let { aspectRatio, width, height, x = 0, y = 0 } = crop;
 
-
-	function getHeight (w, fallback) {
+	function getHeight(w, fallback) {
 		return aspectRatio ? Math.ceil(w / aspectRatio) : fallback;
 	}
 
-	function getWidth (h, fallback) {
+	function getWidth(h, fallback) {
 		return aspectRatio ? Math.ceil(h * aspectRatio) : fallback;
 	}
 
@@ -37,10 +38,11 @@ export default function fixCropFormatting (formatting, layout) {
 	return {
 		...formatting,
 		crop: {
-			x, y,
+			x,
+			y,
 			width,
 			height,
-			aspectRatio
-		}
+			aspectRatio,
+		},
 	};
 }

@@ -1,3 +1,1 @@
-export default function formatRotate (ctx, formatting) {
-
-}
+export default function formatRotate(ctx, formatting) {}

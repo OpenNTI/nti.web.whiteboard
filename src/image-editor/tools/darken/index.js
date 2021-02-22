@@ -5,5 +5,5 @@ import output from './output';
 export default {
 	Control,
 	draw,
-	output
+	output,
 };

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames/bind';
-import {Button, Text} from '@nti/web-commons';
+import { Button, Text } from '@nti/web-commons';
 
 import Styles from './TypeButton.css';
 
@@ -13,9 +13,16 @@ AssetEditorTypeButton.propTypes = {
 	iconClassName: PropTypes.string,
 	activeIconClassName: PropTypes.string,
 	current: PropTypes.string,
-	setCurrent: PropTypes.func
+	setCurrent: PropTypes.func,
 };
-export default function AssetEditorTypeButton ({id, label, iconClassName, activeIconClassName, current, setCurrent}) {
+export default function AssetEditorTypeButton({
+	id,
+	label,
+	iconClassName,
+	activeIconClassName,
+	current,
+	setCurrent,
+}) {
 	const active = current === id;
 
 	const onClick = () => {
@@ -25,11 +32,18 @@ export default function AssetEditorTypeButton ({id, label, iconClassName, active
 	};
 
 	return (
-		<Button className={cx('type-button', {active})} title={label} onClick={onClick}>
-			<div className={cx('icon', active ? activeIconClassName : iconClassName)} />
-			<Text.Base className={cx('type-label')}>
-				{label}
-			</Text.Base>
+		<Button
+			className={cx('type-button', { active })}
+			title={label}
+			onClick={onClick}
+		>
+			<div
+				className={cx(
+					'icon',
+					active ? activeIconClassName : iconClassName
+				)}
+			/>
+			<Text.Base className={cx('type-label')}>{label}</Text.Base>
 		</Button>
 	);
 }

@@ -3,34 +3,32 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
 
-import {Crop, Rotate} from './tools';
-import {getLayoutFor} from './utils';
+import { Crop, Rotate } from './tools';
+import { getLayoutFor } from './utils';
 
-const TOOLS = [
-	Crop, Rotate
-];
+const TOOLS = [Crop, Rotate];
 
 const CANVAS_PADDING = 0;
 
 export default class ImageEditorDisplay extends React.Component {
 	static propTypes = {
 		className: PropTypes.string,
-		editorState: PropTypes.object
-	}
+		editorState: PropTypes.object,
+	};
 
-	state = {}
+	state = {};
 
-	setContainer = x => this.container = x
+	setContainer = x => (this.container = x);
 
 	setCanvas = canvas => {
 		this.canvas = canvas;
 
 		this.draw();
-	}
+	};
 
-	componentDidUpdate (prevProps) {
-		const {editorState:newState} = this.props;
-		const {editorState:oldState} = prevProps;
+	componentDidUpdate(prevProps) {
+		const { editorState: newState } = this.props;
+		const { editorState: oldState } = prevProps;
 
 		if (newState !== oldState) {
 			this.setupInitialState(newState);
@@ -39,30 +37,29 @@ export default class ImageEditorDisplay extends React.Component {
 		this.draw();
 	}
 
-	componentDidMount () {
-		const {editorState} = this.props;
-
+	componentDidMount() {
+		const { editorState } = this.props;
 
 		if (editorState) {
 			this.setupInitialState(editorState);
 		}
 	}
 
-	get size () {
+	get size() {
 		return {
 			width: this.container ? this.container.clientWidth : null,
-			height: this.container ? this.container.clientHeight : null
+			height: this.container ? this.container.clientHeight : null,
 		};
 	}
 
-	setEditorState (state) {
+	setEditorState(state) {
 		this.setState({
-			editorState: state
+			editorState: state,
 		});
 	}
 
-	fixFormatting (formatting, layout) {
-		let newFormat = {...formatting};
+	fixFormatting(formatting, layout) {
+		let newFormat = { ...formatting };
 
 		for (let tool of TOOLS) {
 			if (tool.fixFormatting) {
@@ -73,8 +70,8 @@ export default class ImageEditorDisplay extends React.Component {
 		return newFormat;
 	}
 
-	fixLayout (formatting, layout) {
-		let newLayout = {...layout};
+	fixLayout(formatting, layout) {
+		let newLayout = { ...layout };
 
 		for (let tool of TOOLS) {
 			if (tool.output && tool.output.fixLayout) {
@@ -85,8 +82,8 @@ export default class ImageEditorDisplay extends React.Component {
 		return newLayout;
 	}
 
-	setupInitialState (initialState) {
-		const {image, formatting} = initialState;
+	setupInitialState(initialState) {
+		const { image, formatting } = initialState;
 
 		if (image) {
 			const layout = getLayoutFor(image, this.size, CANVAS_PADDING);
@@ -96,23 +93,24 @@ export default class ImageEditorDisplay extends React.Component {
 			this.setEditorState({
 				image,
 				formatting: newFormatting,
-				layout: newLayout
+				layout: newLayout,
 			});
 		} else if (formatting) {
 			this.setEditorState({
-				formatting
+				formatting,
 			});
 		}
 	}
 
+	draw() {
+		const { editorState } = this.state;
 
-	draw () {
-		const {editorState} = this.state;
-
-		if (!this.canvas || !editorState) { return; }
+		if (!this.canvas || !editorState) {
+			return;
+		}
 
 		const ctx = this.canvas.getContext('2d');
-		const {layout} = editorState;
+		const { layout } = editorState;
 
 		//reset the canvas
 		this.canvas.width = layout.canvas.width;
@@ -122,24 +120,38 @@ export default class ImageEditorDisplay extends React.Component {
 		ctx.lineWidth = 1;
 
 		ctx.save();
-		ctx.drawImage(layout.image.src, layout.image.x, layout.image.y, layout.image.width, layout.image.height);
+		ctx.drawImage(
+			layout.image.src,
+			layout.image.x,
+			layout.image.y,
+			layout.image.width,
+			layout.image.height
+		);
 		ctx.restore();
 	}
 
-
-	render () {
-		const {className, ...otherProps} = this.props;
-		const {editorState} = this.state;
-		const {layout} = editorState || {};
+	render() {
+		const { className, ...otherProps } = this.props;
+		const { editorState } = this.state;
+		const { layout } = editorState || {};
 
 		delete otherProps.editorState;
 
-		const styles = layout && {width: `${layout.canvas.width}px`, height: `${layout.canvas.height}px`};
+		const styles = layout && {
+			width: `${layout.canvas.width}px`,
+			height: `${layout.canvas.height}px`,
+		};
 
 		return (
-			<div className={cx('nti-image-editor-display', className)} {...otherProps} ref={this.setContainer}>
+			<div
+				className={cx('nti-image-editor-display', className)}
+				{...otherProps}
+				ref={this.setContainer}
+			>
 				<div className="canvas-container" style={styles}>
-					{editorState && (<canvas ref={this.setCanvas} width={5} height={3} />)}
+					{editorState && (
+						<canvas ref={this.setCanvas} width={5} height={3} />
+					)}
 				</div>
 			</div>
 		);

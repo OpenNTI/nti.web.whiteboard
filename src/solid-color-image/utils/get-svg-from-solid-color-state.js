@@ -1,9 +1,13 @@
-import {Color} from '@nti/lib-commons';
+import { Color } from '@nti/lib-commons';
 
-import {SVG_IDENTIFIER} from '../Constants';
+import { SVG_IDENTIFIER } from '../Constants';
 
-export default function getSVGFromSolidColorState (editorState, aspectRatio = 1) {
-	const color = (editorState && editorState.color) || Color.fromRGB(255, 255, 255);
+export default function getSVGFromSolidColorState(
+	editorState,
+	aspectRatio = 1
+) {
+	const color =
+		(editorState && editorState.color) || Color.fromRGB(255, 255, 255);
 	const fill = color.rgb.toString();
 	const width = 100;
 	const height = width / aspectRatio;

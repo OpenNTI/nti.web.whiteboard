@@ -1,62 +1,61 @@
-import {CORNER_RADIUS} from './Constants';
+import { CORNER_RADIUS } from './Constants';
 
-
-function getPointForEvent (e) {
-	const {clientX:eventX, clientY:eventY} = e;
+function getPointForEvent(e) {
+	const { clientX: eventX, clientY: eventY } = e;
 
 	return [eventX, eventY];
 }
 
-function isInCrop (point, crop) {
+function isInCrop(point, crop) {
 	return (
 		point[0] >= crop.x &&
-		point[0] <= (crop.x + crop.width) &&
+		point[0] <= crop.x + crop.width &&
 		point[1] >= crop.y &&
-		point[1] <= (crop.y + crop.height)
+		point[1] <= crop.y + crop.height
 	);
 }
 
-function getDistance (a, b) {
+function getDistance(a, b) {
 	const diffX = a[0] - b[0];
 	const diffY = a[1] - b[1];
 
-	return Math.sqrt((diffX * diffX) + (diffY * diffY));
+	return Math.sqrt(diffX * diffX + diffY * diffY);
 }
 
-function isWithInDistance (a, b, distance) {
+function isWithInDistance(a, b, distance) {
 	const dist = getDistance(a, b);
 
 	return dist <= distance;
 }
 
-function isInNWCorner (point, crop) {
+function isInNWCorner(point, crop) {
 	const corner = [crop.x, crop.y];
 
 	return isWithInDistance(point, corner, CORNER_RADIUS);
 }
 
-function isInNECorner (point, crop) {
+function isInNECorner(point, crop) {
 	const corner = [crop.x + crop.width, crop.y];
 
 	return isWithInDistance(point, corner, CORNER_RADIUS);
 }
 
-function isInSECorner (point, crop) {
+function isInSECorner(point, crop) {
 	const corner = [crop.x + crop.width, crop.y + crop.height];
 
 	return isWithInDistance(point, corner, CORNER_RADIUS);
 }
 
-function isInSWCorner (point, crop) {
-	const corner = [crop.x , crop.y + crop.height];
+function isInSWCorner(point, crop) {
+	const corner = [crop.x, crop.y + crop.height];
 
 	return isWithInDistance(point, corner, CORNER_RADIUS);
 }
 
-function fitHeightToRatio (size, ratio, minSize, maxSize) {
+function fitHeightToRatio(size, ratio, minSize, maxSize) {
 	const getHeight = width => Math.ceil(width / ratio);
 
-	let fixedSize = {width: size.width, height: getHeight(size.width)};
+	let fixedSize = { width: size.width, height: getHeight(size.width) };
 
 	while (fixedSize.height > maxSize.heigth) {
 		fixedSize.width -= 1;
@@ -66,10 +65,10 @@ function fitHeightToRatio (size, ratio, minSize, maxSize) {
 	return fixedSize;
 }
 
-function fitWidthToRatio (size, ratio, minSize, maxSize) {
+function fitWidthToRatio(size, ratio, minSize, maxSize) {
 	const getWidth = height => Math.ceil(height * ratio);
 
-	let fixedSize = {width: getWidth(size.height), height: size.height};
+	let fixedSize = { width: getWidth(size.height), height: size.height };
 
 	while (fixedSize.width > maxSize.width) {
 		fixedSize.height -= 1;
@@ -79,17 +78,25 @@ function fitWidthToRatio (size, ratio, minSize, maxSize) {
 	return fixedSize;
 }
 
-function fitSizeToRatio (size, ratio, minSize, maxSize) {
+function fitSizeToRatio(size, ratio, minSize, maxSize) {
 	//if the size already fits the ratio don't do anything
-	if (size.width / size.height === ratio) { return size; }
+	if (size.width / size.height === ratio) {
+		return size;
+	}
 
 	const desiredLength = getDistance([0, 0], [size.width, size.height]);
 
 	const fixedForHeight = fitHeightToRatio(size, ratio, minSize, maxSize);
 	const fixedForWidth = fitWidthToRatio(size, ratio, minSize, maxSize);
 
-	const heightDistance = getDistance([0, 0], [fixedForHeight.width, fixedForHeight.height]);
-	const widthDistance = getDistance([0, 0], [fixedForWidth.width, fixedForWidth.height]);
+	const heightDistance = getDistance(
+		[0, 0],
+		[fixedForHeight.width, fixedForHeight.height]
+	);
+	const widthDistance = getDistance(
+		[0, 0],
+		[fixedForWidth.width, fixedForWidth.height]
+	);
 
 	const heightDiff = Math.abs(desiredLength - heightDistance);
 	const widthDiff = Math.abs(desiredLength - widthDistance);
@@ -97,7 +104,13 @@ function fitSizeToRatio (size, ratio, minSize, maxSize) {
 	return heightDiff > widthDiff ? fixedForWidth : fixedForHeight;
 }
 
-function getSizeFromPointToAnchor (point, anchor, minSize, maxSize, aspectRatio) {
+function getSizeFromPointToAnchor(
+	point,
+	anchor,
+	minSize,
+	maxSize,
+	aspectRatio
+) {
 	const diffX = Math.abs(point[0] - anchor[0]);
 	const diffY = Math.abs(point[1] - anchor[1]);
 
@@ -105,21 +118,25 @@ function getSizeFromPointToAnchor (point, anchor, minSize, maxSize, aspectRatio)
 
 	const size = {
 		width: clamp(diffX, minSize.width, maxSize.width),
-		height: clamp(diffY, minSize.height, maxSize.height)
+		height: clamp(diffY, minSize.height, maxSize.height),
 	};
 
-	return aspectRatio ? fitSizeToRatio(size, aspectRatio, minSize, maxSize) : size;
+	return aspectRatio
+		? fitSizeToRatio(size, aspectRatio, minSize, maxSize)
+		: size;
 }
 
-
-function getSizingConstraints (crop, layout) {
+function getSizingConstraints(crop, layout) {
 	return {
-		minSize: crop.minSize || {width: 14, height: 14},
-		maxSize: crop.maxSize || {width: layout.image.width, height: layout.image.height}
+		minSize: crop.minSize || { width: 14, height: 14 },
+		maxSize: crop.maxSize || {
+			width: layout.image.width,
+			height: layout.image.height,
+		},
 	};
 }
 
-function constrainCrop (crop, layout) {
+function constrainCrop(crop, layout) {
 	if (crop.x < 0) {
 		crop.width = crop.width - crop.x;
 		crop.x = 0;
@@ -141,11 +158,9 @@ function constrainCrop (crop, layout) {
 	return crop;
 }
 
-
-
 const ACTIONS = {
-	move (point, crop, action, formatting, layout, setEditorState) {
-		const {lastPoint} = action;
+	move(point, crop, action, formatting, layout, setEditorState) {
+		const { lastPoint } = action;
 		const xDiff = point[0] - lastPoint[0];
 		const yDiff = point[1] - lastPoint[1];
 
@@ -178,21 +193,29 @@ const ACTIONS = {
 					y: newY,
 					action: {
 						name: 'move',
-						lastPoint: point
-					}
-				}
-			}
+						lastPoint: point,
+					},
+				},
+			},
 		});
 	},
 
+	nwResize(point, crop, action, formatting, layout, setEditorState) {
+		const { anchorPoint } = action;
 
-	nwResize (point, crop, action, formatting, layout, setEditorState) {
-		const {anchorPoint} = action;
+		const { minSize, maxSize } = getSizingConstraints(crop, layout);
 
-		const {minSize, maxSize} = getSizingConstraints(crop, layout);
-
-		const newSize = getSizeFromPointToAnchor(point, anchorPoint, minSize, maxSize, crop.aspectRatio);
-		const newOrigin = [anchorPoint[0] - newSize.width, anchorPoint[1] - newSize.height];
+		const newSize = getSizeFromPointToAnchor(
+			point,
+			anchorPoint,
+			minSize,
+			maxSize,
+			crop.aspectRatio
+		);
+		const newOrigin = [
+			anchorPoint[0] - newSize.width,
+			anchorPoint[1] - newSize.height,
+		];
 
 		//If we've dragged pass the anchor don't start getting bigger
 		if (point[0] > anchorPoint[0]) {
@@ -205,31 +228,39 @@ const ACTIONS = {
 			newOrigin[1] = anchorPoint[1] - minSize.height;
 		}
 
-		const newCrop = constrainCrop({
-			x: newOrigin[0],
-			y: newOrigin[1],
-			width: newSize.width,
-			height: newSize.height
-		}, layout);
+		const newCrop = constrainCrop(
+			{
+				x: newOrigin[0],
+				y: newOrigin[1],
+				width: newSize.width,
+				height: newSize.height,
+			},
+			layout
+		);
 
 		setEditorState({
 			formatting: {
 				...formatting,
 				crop: {
 					...crop,
-					...newCrop
-				}
-			}
+					...newCrop,
+				},
+			},
 		});
 	},
 
+	seResize(point, crop, action, formatting, layout, setEditorState) {
+		const { anchorPoint } = action;
 
-	seResize (point, crop, action, formatting, layout, setEditorState) {
-		const {anchorPoint} = action;
+		const { minSize, maxSize } = getSizingConstraints(crop, layout);
 
-		const {minSize, maxSize} = getSizingConstraints(crop, layout);
-
-		const newSize = getSizeFromPointToAnchor(point, anchorPoint, minSize, maxSize, crop.aspectRatio);
+		const newSize = getSizeFromPointToAnchor(
+			point,
+			anchorPoint,
+			minSize,
+			maxSize,
+			crop.aspectRatio
+		);
 		const newOrigin = [anchorPoint[0], anchorPoint[1]];
 
 		if (point[0] < anchorPoint[0]) {
@@ -240,31 +271,39 @@ const ACTIONS = {
 			newSize.height = minSize.height;
 		}
 
-		const newCrop = constrainCrop({
-			x: newOrigin[0],
-			y: newOrigin[1],
-			width: newSize.width,
-			height: newSize.height
-		}, layout);
+		const newCrop = constrainCrop(
+			{
+				x: newOrigin[0],
+				y: newOrigin[1],
+				width: newSize.width,
+				height: newSize.height,
+			},
+			layout
+		);
 
 		setEditorState({
 			formatting: {
 				...formatting,
 				crop: {
 					...crop,
-					...newCrop
-				}
-			}
+					...newCrop,
+				},
+			},
 		});
 	},
 
+	neResize(point, crop, action, formatting, layout, setEditorState) {
+		const { anchorPoint } = action;
 
-	neResize (point, crop, action, formatting, layout, setEditorState) {
-		const {anchorPoint} = action;
+		const { minSize, maxSize } = getSizingConstraints(crop, layout);
 
-		const {minSize, maxSize} = getSizingConstraints(crop, layout);
-
-		const newSize = getSizeFromPointToAnchor(point, anchorPoint, minSize, maxSize, crop.aspectRatio);
+		const newSize = getSizeFromPointToAnchor(
+			point,
+			anchorPoint,
+			minSize,
+			maxSize,
+			crop.aspectRatio
+		);
 		const newOrigin = [anchorPoint[0], anchorPoint[1] - newSize.height];
 
 		if (point[0] < anchorPoint[0]) {
@@ -276,31 +315,39 @@ const ACTIONS = {
 			newOrigin[1] = anchorPoint[1] - minSize.height;
 		}
 
-		const newCrop = constrainCrop({
-			x: newOrigin[0],
-			y: newOrigin[1],
-			width: newSize.width,
-			height: newSize.height
-		}, layout);
+		const newCrop = constrainCrop(
+			{
+				x: newOrigin[0],
+				y: newOrigin[1],
+				width: newSize.width,
+				height: newSize.height,
+			},
+			layout
+		);
 
 		setEditorState({
 			formatting: {
 				...formatting,
 				crop: {
 					...crop,
-					...newCrop
-				}
-			}
+					...newCrop,
+				},
+			},
 		});
 	},
 
+	swResize(point, crop, action, formatting, layout, setEditorState) {
+		const { anchorPoint } = action;
 
-	swResize (point, crop, action, formatting, layout, setEditorState) {
-		const {anchorPoint} = action;
+		const { minSize, maxSize } = getSizingConstraints(crop, layout);
 
-		const {minSize, maxSize} = getSizingConstraints(crop, layout);
-
-		const newSize = getSizeFromPointToAnchor(point, anchorPoint, minSize, maxSize, crop.aspectRatio);
+		const newSize = getSizeFromPointToAnchor(
+			point,
+			anchorPoint,
+			minSize,
+			maxSize,
+			crop.aspectRatio
+		);
 		const newOrigin = [anchorPoint[0] - newSize.width, anchorPoint[1]];
 
 		if (point[0] > anchorPoint[0]) {
@@ -312,80 +359,109 @@ const ACTIONS = {
 			newSize.height = minSize.height;
 		}
 
-		const newCrop = constrainCrop({
-			x: newOrigin[0],
-			y: newOrigin[1],
-			width: newSize.width,
-			height: newSize.height
-		}, layout);
+		const newCrop = constrainCrop(
+			{
+				x: newOrigin[0],
+				y: newOrigin[1],
+				width: newSize.width,
+				height: newSize.height,
+			},
+			layout
+		);
 
 		setEditorState({
 			formatting: {
 				...formatting,
 				crop: {
 					...crop,
-					...newCrop
-				}
-			}
+					...newCrop,
+				},
+			},
 		});
-	}
+	},
 };
 
-
-
 export default {
-	initial (formatting, layout) {
-		const {crop} = formatting;
+	initial(formatting, layout) {
+		const { crop } = formatting;
 
-		if (!crop) { return formatting; }
+		if (!crop) {
+			return formatting;
+		}
 
-		const {minSize, maxSize} = getSizingConstraints(crop, layout);
+		const { minSize, maxSize } = getSizingConstraints(crop, layout);
 
-		const anchorPoint = crop.x != null && crop.y != null ? [crop.x, crop.y] : [0, 0];
+		const anchorPoint =
+			crop.x != null && crop.y != null ? [crop.x, crop.y] : [0, 0];
 		const focusPoint = [layout.canvas.width, layout.canvas.height];
 
-		const newSize = getSizeFromPointToAnchor(focusPoint, anchorPoint, minSize, maxSize, crop.aspectRatio);
+		const newSize = getSizeFromPointToAnchor(
+			focusPoint,
+			anchorPoint,
+			minSize,
+			maxSize,
+			crop.aspectRatio
+		);
 
-		const newCrop = constrainCrop({
-			width: newSize.width,
-			height: newSize.height,
-			x: crop.x != null ? crop.x : (layout.canvas.width / 2) - (newSize.width / 2),
-			y: crop.y != null ? crop.y : (layout.canvas.height / 2)  - (newSize.height / 2)
-		}, layout);
+		const newCrop = constrainCrop(
+			{
+				width: newSize.width,
+				height: newSize.height,
+				x:
+					crop.x != null
+						? crop.x
+						: layout.canvas.width / 2 - newSize.width / 2,
+				y:
+					crop.y != null
+						? crop.y
+						: layout.canvas.height / 2 - newSize.height / 2,
+			},
+			layout
+		);
 
 		return {
 			...formatting,
-			crop: newCrop
+			crop: newCrop,
 		};
 	},
 
-	onMouseMove (e, formatting, layout, setEditorState) {
-		const {crop} = formatting;
+	onMouseMove(e, formatting, layout, setEditorState) {
+		const { crop } = formatting;
 
-		if (!crop) { return; }
+		if (!crop) {
+			return;
+		}
 
 		const point = getPointForEvent(e);
 
 		if (crop.action && ACTIONS[crop.action.name]) {
-			return ACTIONS[crop.action.name](point, crop, crop.action, formatting, layout, setEditorState);
+			return ACTIONS[crop.action.name](
+				point,
+				crop,
+				crop.action,
+				formatting,
+				layout,
+				setEditorState
+			);
 		}
 
 		if (isInNWCorner(point, crop) || isInSECorner(point, crop)) {
-			setEditorState({cursor: 'nwse-resize'});
+			setEditorState({ cursor: 'nwse-resize' });
 		} else if (isInNECorner(point, crop) || isInSWCorner(point, crop)) {
-			setEditorState({cursor: 'nesw-resize'});
+			setEditorState({ cursor: 'nesw-resize' });
 		} else if (isInCrop(point, crop)) {
-			setEditorState({cursor: 'move'});
+			setEditorState({ cursor: 'move' });
 		} else {
-			setEditorState({cursor: null});
+			setEditorState({ cursor: null });
 		}
 	},
 
+	onMouseDown(e, formatting, layout, setEditorState) {
+		const { crop } = formatting;
 
-	onMouseDown (e, formatting, layout, setEditorState) {
-		const {crop} = formatting;
-
-		if (!crop) { return; }
+		if (!crop) {
+			return;
+		}
 
 		const point = getPointForEvent(e);
 
@@ -394,31 +470,29 @@ export default {
 		if (isInNWCorner(point, crop)) {
 			action = {
 				name: 'nwResize',
-				anchorPoint: [crop.x + crop.width, crop.y + crop.height]
+				anchorPoint: [crop.x + crop.width, crop.y + crop.height],
 			};
-
 		} else if (isInSECorner(point, crop)) {
 			action = {
 				name: 'seResize',
-				anchorPoint: [crop.x, crop.y]
+				anchorPoint: [crop.x, crop.y],
 			};
 		} else if (isInNECorner(point, crop)) {
 			action = {
 				name: 'neResize',
-				anchorPoint: [crop.x, crop.y + crop.height]
+				anchorPoint: [crop.x, crop.y + crop.height],
 			};
 		} else if (isInSWCorner(point, crop)) {
 			action = {
 				name: 'swResize',
-				anchorPoint: [crop.x + crop.width, crop.y]
+				anchorPoint: [crop.x + crop.width, crop.y],
 			};
 		} else if (isInCrop(point, crop)) {
 			action = {
 				name: 'move',
-				lastPoint: point
+				lastPoint: point,
 			};
 		}
-
 
 		if (action) {
 			setEditorState({
@@ -426,18 +500,19 @@ export default {
 					...formatting,
 					crop: {
 						...crop,
-						action
-					}
-				}
+						action,
+					},
+				},
 			});
 		}
 	},
 
+	onMouseUp(e, formatting, layout, setEditorState) {
+		const { crop } = formatting;
 
-	onMouseUp (e, formatting, layout, setEditorState) {
-		const {crop} = formatting;
-
-		if (!crop) { return; }
+		if (!crop) {
+			return;
+		}
 
 		if (crop.action) {
 			setEditorState({
@@ -445,18 +520,19 @@ export default {
 					...formatting,
 					crop: {
 						...crop,
-						action: null
-					}
-				}
+						action: null,
+					},
+				},
 			});
 		}
 	},
 
+	onMouseOut(e, formatting, layout, setEditorState) {
+		const { crop } = formatting;
 
-	onMouseOut (e, formatting, layout, setEditorState) {
-		const {crop} = formatting;
-
-		if (!crop) { return; }
+		if (!crop) {
+			return;
+		}
 
 		if (crop.action) {
 			setEditorState({
@@ -464,10 +540,10 @@ export default {
 					...formatting,
 					crop: {
 						...crop,
-						action: null
-					}
-				}
+						action: null,
+					},
+				},
 			});
 		}
-	}
+	},
 };
