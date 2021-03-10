@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { scoped } from '@nti/lib-locale';
 import classnames from 'classnames/bind';
+
+import { scoped } from '@nti/lib-locale';
 import { Button, Image, Text } from '@nti/web-commons';
 
 import * as ImageEditor from '../../../image-editor';
