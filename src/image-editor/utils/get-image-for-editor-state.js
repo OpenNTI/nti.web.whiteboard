@@ -1,19 +1,25 @@
 import getCanvasForEditorState from './get-canvas-for-editor-state';
 
-export default function getImageForEditorState(editorState) {
+export default async function getImageForEditorState(editorState) {
 	const canvas = getCanvasForEditorState(editorState);
 
 	if (!canvas) {
-		return Promise.reject();
+		throw new Error('No Canvas');
 	}
 
 	return new Promise((fulfill, reject) => {
-		const img = new Image();
+		try {
+			const img = new Image();
 
-		img.onload = () => {
-			fulfill(img);
-		};
+			img.onerror = reject;
+			img.onload = () => {
+				fulfill(img);
+			};
 
-		img.src = canvas.toDataURL();
+
+			img.src = canvas.toDataURL();
+		} catch (er) {
+			reject(er);
+		}
 	});
 }
