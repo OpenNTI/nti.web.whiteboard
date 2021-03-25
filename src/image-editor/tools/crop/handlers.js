@@ -109,7 +109,10 @@ function getSizeFromPointToAnchor(
 	anchor,
 	minSize,
 	maxSize,
-	aspectRatio
+	aspectRatio,
+	minAspectRatio = -Infinity,
+	maxAspectRatio = Infinity,
+	aspectRatioLocked
 ) {
 	const diffX = Math.abs(point[0] - anchor[0]);
 	const diffY = Math.abs(point[1] - anchor[1]);
@@ -121,8 +124,11 @@ function getSizeFromPointToAnchor(
 		height: clamp(diffY, minSize.height, maxSize.height),
 	};
 
-	return aspectRatio
-		? fitSizeToRatio(size, aspectRatio, minSize, maxSize)
+	const newAspectRatio = size.width / size.height;
+	const restrictedAspectRatio = aspectRatioLocked ? aspectRatio : clamp(newAspectRatio, minAspectRatio, maxAspectRatio);
+
+	return newAspectRatio !== restrictedAspectRatio
+		? fitSizeToRatio(size, restrictedAspectRatio, minSize, maxSize)
 		: size;
 }
 
@@ -210,7 +216,10 @@ const ACTIONS = {
 			anchorPoint,
 			minSize,
 			maxSize,
-			crop.aspectRatio
+			crop.aspectRatio,
+			crop.minAspectRatio,
+			crop.maxAspectRatio,
+			crop.aspectRatioLocked
 		);
 		const newOrigin = [
 			anchorPoint[0] - newSize.width,
@@ -234,6 +243,7 @@ const ACTIONS = {
 				y: newOrigin[1],
 				width: newSize.width,
 				height: newSize.height,
+				aspectRatio: newSize.width / newSize.height
 			},
 			layout
 		);
@@ -259,7 +269,10 @@ const ACTIONS = {
 			anchorPoint,
 			minSize,
 			maxSize,
-			crop.aspectRatio
+			crop.aspectRatio,
+			crop.minAspectRatio,
+			crop.maxAspectRatio,
+			crop.aspectRatioLocked
 		);
 		const newOrigin = [anchorPoint[0], anchorPoint[1]];
 
@@ -277,6 +290,7 @@ const ACTIONS = {
 				y: newOrigin[1],
 				width: newSize.width,
 				height: newSize.height,
+				aspectRatio: newSize.width / newSize.height
 			},
 			layout
 		);
@@ -302,7 +316,10 @@ const ACTIONS = {
 			anchorPoint,
 			minSize,
 			maxSize,
-			crop.aspectRatio
+			crop.aspectRatio,
+			crop.minAspectRatio,
+			crop.maxAspectRatio,
+			crop.aspectRatioLocked
 		);
 		const newOrigin = [anchorPoint[0], anchorPoint[1] - newSize.height];
 
@@ -321,6 +338,7 @@ const ACTIONS = {
 				y: newOrigin[1],
 				width: newSize.width,
 				height: newSize.height,
+				aspectRatio: newSize.width / newSize.height
 			},
 			layout
 		);
@@ -346,7 +364,10 @@ const ACTIONS = {
 			anchorPoint,
 			minSize,
 			maxSize,
-			crop.aspectRatio
+			crop.aspectRatio,
+			crop.minAspectRatio,
+			crop.maxAspectRatio,
+			crop.aspectRatioLocked
 		);
 		const newOrigin = [anchorPoint[0] - newSize.width, anchorPoint[1]];
 
@@ -365,6 +386,7 @@ const ACTIONS = {
 				y: newOrigin[1],
 				width: newSize.width,
 				height: newSize.height,
+				aspectRatio: newSize.width / newSize.height
 			},
 			layout
 		);
@@ -400,13 +422,17 @@ export default {
 			anchorPoint,
 			minSize,
 			maxSize,
-			crop.aspectRatio
+			crop.aspectRatio,
+			crop.minAspectRatio,
+			crop.maxAspectRatio,
+			crop.aspectRatioLocked
 		);
 
 		const newCrop = constrainCrop(
 			{
 				width: newSize.width,
 				height: newSize.height,
+				aspectRatio: newSize.width / newSize.height,
 				x:
 					crop.x != null
 						? crop.x

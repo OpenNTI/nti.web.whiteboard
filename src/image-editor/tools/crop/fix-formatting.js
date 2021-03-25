@@ -1,3 +1,4 @@
+//aspect ratio: w / h
 export default function fixCropFormatting(formatting, layout) {
 	const { crop } = formatting;
 
@@ -5,14 +6,24 @@ export default function fixCropFormatting(formatting, layout) {
 		return formatting;
 	}
 
-	let { aspectRatio, width, height, x = 0, y = 0 } = crop;
+	let {
+		aspectRatio,
+		maxAspectRatio,
+		minAspectRatio,
+		width,
+		height,
+		x = 0,
+		y = 0
+	} = crop;
+
+	const effectiveAspectRatio = aspectRatio ?? minAspectRatio ?? maxAspectRatio;
 
 	function getHeight(w, fallback) {
-		return aspectRatio ? Math.ceil(w / aspectRatio) : fallback;
+		return effectiveAspectRatio ? Math.ceil(w / effectiveAspectRatio) : fallback;
 	}
 
 	function getWidth(h, fallback) {
-		return aspectRatio ? Math.ceil(h * aspectRatio) : fallback;
+		return effectiveAspectRatio ? Math.ceil(h * effectiveAspectRatio) : fallback;
 	}
 
 	if (!width && !height) {
@@ -42,7 +53,10 @@ export default function fixCropFormatting(formatting, layout) {
 			y,
 			width,
 			height,
-			aspectRatio,
+			aspectRatio: effectiveAspectRatio,
+			aspectRatioLocked: aspectRatio != null,
+			maxAspectRatio,
+			minAspectRatio
 		},
 	};
 }

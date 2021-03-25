@@ -19,6 +19,17 @@ export function getImgSrc(file) {
 	});
 }
 
+export function getImg (src) {
+	return new Promise((fulfill, reject) => {
+		const img = new Image();
+
+		img.onload = () => fulfill(img);
+		img.onerror = (e) => reject(e);
+
+		img.src = src;
+	});
+}
+
 export function getLayoutFor(img, size) {
 	const imgSize = { height: img.height, width: img.width };
 	const canvasSize = { height: size.height, width: size.width };
