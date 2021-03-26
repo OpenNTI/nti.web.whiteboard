@@ -1,4 +1,6 @@
 //aspect ratio: w / h
+const clamp = (x, min, max) => Math.max(min, Math.min(x, max));
+
 export default function fixCropFormatting(formatting, layout) {
 	const { crop } = formatting;
 
@@ -16,7 +18,12 @@ export default function fixCropFormatting(formatting, layout) {
 		y = 0
 	} = crop;
 
-	const effectiveAspectRatio = aspectRatio ?? minAspectRatio ?? maxAspectRatio;
+	const effectiveAspectRatio = clamp(
+		aspectRatio ?? (layout.image.width / layout.image.height),
+		minAspectRatio ?? -Infinity,
+		maxAspectRatio ?? Infinity
+	);
+
 
 	function getHeight(w, fallback) {
 		return effectiveAspectRatio ? Math.ceil(w / effectiveAspectRatio) : fallback;
