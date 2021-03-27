@@ -74,7 +74,6 @@ export default function getCanvasForEditorState(editorState, outputSize) {
 		}
 	}
 
-	debugger;
 	outputLayout = scaleLayout(outputLayout);
 	outputLayout = scaleOutput(outputLayout, outputSize);
 
