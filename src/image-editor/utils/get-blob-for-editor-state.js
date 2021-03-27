@@ -1,7 +1,7 @@
 import getCanvasForEditorState from './get-canvas-for-editor-state';
 
-export default async function getBlobForEditorState(editorState) {
-	const canvas = getCanvasForEditorState(editorState);
+export default async function getBlobForEditorState(editorState, outputSize) {
+	const canvas = getCanvasForEditorState(editorState, outputSize);
 
 	if (!canvas) {
 		throw new Error('No Canvas');

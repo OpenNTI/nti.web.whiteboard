@@ -2,8 +2,7 @@ import { Crop, Rotate, Blur, Darken } from '../tools';
 
 const TOOLS = [Crop, Rotate, Darken, Blur];
 
-function scaleLayout(layout) {
-	const imgScale = Math.max(layout.image.scale ?? 1, 1);
+function applyScale (layout, imgScale) {
 	const scale = x => x * imgScale;
 
 	return {
@@ -22,7 +21,28 @@ function scaleLayout(layout) {
 	};
 }
 
-export default function getCanvasForEditorState(editorState) {
+function scaleLayout(layout) {
+	const scale = Math.max(layout.image.scale ?? 1, 1);
+
+	return applyScale(layout, scale);
+}
+
+function scaleOutput(layout, outputSize) {
+	if (!outputSize) { return layout; }
+
+	//Throw for non-supported options yet
+	if (outputSize.maxWidth) { throw new Error('maxWidth is not supported in outputSize yet.'); }
+	if (outputSize.height) { throw new Error('height is not supported by outputSize yet.'); }
+	if (outputSize.width) { throw new Error('width is not supported in outputSize yet.'); }
+
+	if (layout.canvas.height <= outputSize.maxHeight) { return layout; }
+
+	const scale = outputSize.maxHeight / layout.canvas.height;
+
+	return applyScale(layout, scale);
+}
+
+export default function getCanvasForEditorState(editorState, outputSize) {
 	const canvas = document.createElement('canvas');
 	const ctx = canvas.getContext('2d');
 
@@ -54,7 +74,9 @@ export default function getCanvasForEditorState(editorState) {
 		}
 	}
 
+	debugger;
 	outputLayout = scaleLayout(outputLayout);
+	outputLayout = scaleOutput(outputLayout, outputSize);
 
 	canvas.width = outputLayout.canvas.width;
 	canvas.height = outputLayout.canvas.height;
