@@ -1,9 +1,13 @@
 import { CORNER_RADIUS } from './Constants';
 
-function getPointForEvent(e) {
-	const { clientX: eventX, clientY: eventY } = e;
+function getPointForEvent(e, canvas, padding) {
+	const {clientX, clientY} = e;
+	const canvasRect = canvas.getBoundingClientRect();
 
-	return [eventX, eventY];
+	return [
+		clientX - canvasRect.left - padding,
+		clientY - canvasRect.top - padding
+	];
 }
 
 function isInCrop(point, crop) {
@@ -403,6 +407,8 @@ const ACTIONS = {
 	},
 };
 
+//NOTE: to get this working on touch devices for now we are just switching mouse events for pointer events
+// I think the crop interaction could be improved upon for touch devices (ie. pinch to scale up/down), this is just a bandaid to keep us moving
 export default {
 	initial(formatting, layout) {
 		const { crop } = formatting;
@@ -451,14 +457,16 @@ export default {
 		};
 	},
 
-	onMouseMove(e, formatting, layout, setEditorState) {
+	listeners: ['onPointerMove', 'onPointerDown', 'onPointerUp', 'onPointerOut'],
+
+	onPointerMove(e, {canvas, padding, formatting, layout, setEditorState}) {
 		const { crop } = formatting;
 
 		if (!crop) {
 			return;
 		}
 
-		const point = getPointForEvent(e);
+		const point = getPointForEvent(e, canvas, padding);
 
 		if (crop.action && ACTIONS[crop.action.name]) {
 			return ACTIONS[crop.action.name](
@@ -482,14 +490,14 @@ export default {
 		}
 	},
 
-	onMouseDown(e, formatting, layout, setEditorState) {
+	onPointerDown(e, {canvas, padding, formatting, layout, setEditorState}) {
 		const { crop } = formatting;
 
 		if (!crop) {
 			return;
 		}
 
-		const point = getPointForEvent(e);
+		const point = getPointForEvent(e, canvas, padding);
 
 		let action;
 
@@ -533,7 +541,7 @@ export default {
 		}
 	},
 
-	onMouseUp(e, formatting, layout, setEditorState) {
+	onPointerUp(e, {formatting, layout, setEditorState}) {
 		const { crop } = formatting;
 
 		if (!crop) {
@@ -553,7 +561,7 @@ export default {
 		}
 	},
 
-	onMouseOut(e, formatting, layout, setEditorState) {
+	onPointerOut(e, {formatting, layout, setEditorState}) {
 		const { crop } = formatting;
 
 		if (!crop) {

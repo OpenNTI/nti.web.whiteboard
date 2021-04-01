@@ -11,15 +11,6 @@ const TOOLS = [Blur, Darken, Crop, Rotate];
 
 const CANVAS_PADDING = 20;
 
-function getMouseEvent(e, canvas) {
-	const rect = canvas.getBoundingClientRect();
-
-	return {
-		clientX: e.clientX - rect.left - CANVAS_PADDING,
-		clientY: e.clientY - rect.top - CANVAS_PADDING,
-	};
-}
-
 export default class ImageEditor extends React.Component {
 	static Controls = Toolbar.Controls;
 
@@ -46,6 +37,16 @@ export default class ImageEditor extends React.Component {
 			initialState: editorState || {},
 			currentEditorState: {},
 		};
+
+		this.canvasListeners = {};
+
+		for (let tool of TOOLS) {
+			for (let listener of (tool.listeners ?? [])) {
+				if (!this.canvasListeners[listener]) {
+					this.canvasListeners[listener] = this.buildCanvasListener(listener);
+				}
+			}
+		}
 	}
 
 	componentDidMount() {
@@ -230,38 +231,27 @@ export default class ImageEditor extends React.Component {
 		});
 	};
 
-	onMouseEvent(name, ...args) {
-		const { activeControl } = this.state;
+	buildCanvasListener (name) {
+		return (e) => {
+			const { activeControl } = this.state;
+			const eventArgs = [
+				e,
+				{
+					canvas: this.canvas,
+					padding: CANVAS_PADDING,
+					formatting: this.currentFormatting,
+					layout: this.currentLayout,
+					setEditorState: this.setEditorState
+				}
+			];
 
-		if (activeControl && activeControl[name]) {
-			activeControl[name](
-				...args,
-				this.currentFormatting,
-				this.currentLayout,
-				this.setEditorState
-			);
-		}
+			activeControl?.[name]?.(...eventArgs);
 
-		for (let tool of TOOLS) {
-			if (tool[name]) {
-				tool[name](
-					...args,
-					this.currentFormatting,
-					this.currentLayout,
-					this.setEditorState
-				);
+			for (let tool of TOOLS) {
+				tool[name]?.(...eventArgs);
 			}
-		}
+		};
 	}
-
-	onMouseDown = e =>
-		this.onMouseEvent('onMouseDown', getMouseEvent(e, this.canvas));
-	onMouseUp = e =>
-		this.onMouseEvent('onMouseUp', getMouseEvent(e, this.canvas));
-	onMouseMove = e =>
-		this.onMouseEvent('onMouseMove', getMouseEvent(e, this.canvas));
-	onMouseOut = e =>
-		this.onMouseEvent('onMouseOut', getMouseEvent(e, this.canvas));
 
 	render() {
 		const { cursor } = this.currentState;
@@ -296,9 +286,7 @@ export default class ImageEditor extends React.Component {
 							style={canvasStyles}
 							onMouseDown={this.onMouseDown}
 							ref={this.setCanvas}
-							onMouseUp={this.onMouseUp}
-							onMouseMove={this.onMouseMove}
-							onMouseOut={this.onMouseOut}
+							{...this.canvasListeners}
 						/>
 					</div>
 				)}
