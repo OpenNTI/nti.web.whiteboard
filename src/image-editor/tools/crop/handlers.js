@@ -373,7 +373,7 @@ const ACTIONS = {
 
 		if (point[0] > anchorPoint[0]) {
 			newSize.width = minSize.width;
-			newOrigin[0] = anchorPoint - minSize.width;
+			newOrigin[0] = anchorPoint[0] - minSize.width;
 		}
 
 		if (point[1] < anchorPoint[1]) {
