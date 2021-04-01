@@ -233,6 +233,9 @@ export default class ImageEditor extends React.Component {
 
 	buildCanvasListener (name) {
 		return (e) => {
+			e.stopPropagation();
+			e.preventDefault();
+
 			const { activeControl } = this.state;
 			const eventArgs = [
 				e,
