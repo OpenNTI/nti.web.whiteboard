@@ -2,7 +2,11 @@ export const clamp = (d, min, max) => Math.min(Math.max(d, min), max);
 
 /**
  * Transform a point to the upper right quadrant if the target becomes the origin
- * (Note: Not quite a rotation, we're doing this to simplify some of the math)
+ * (
+ *  Note: Not quite a rotation, we're doing this to simplify some of the math
+ *  SubNote: It might not simplify the math, but it simplifies thinking about the math
+ * )
+ *
  * @param {Array} target point
  * @param {Array} anchor new origin
  * @returns {Array} target relative to anchor being the new origin
@@ -15,7 +19,9 @@ export const getBoxBetween = (pointA, pointB) => ({
 });
 
 /**
- * Get the slope of the line for the current aspect ratio, from [0, 0] to the given point
+ * Get the slope of the line for the current aspect ratio, from anchor to the point
+ * and matching all given constraints.
+ *
  * @param {Array} point point to get the slope through
  * @param {Array} anchor second point to get the slop through
  * @param {Object} crop the config passed to the cropping tool
