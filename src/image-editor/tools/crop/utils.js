@@ -37,7 +37,10 @@ export const getBoxBetween = (pointA, pointB) => ({
 	} = crop;
 
 	const newAspectRatio = (point[0] - anchor[0]) / (point[1] - anchor[1]);
-	const ratio = aspectRatioLocked ? aspectRatio : clamp(newAspectRatio, minAspectRatio, maxAspectRatio);
+	//if we got NaN for the newAspectRatio, use the current aspect ratio
+	const correctedAspectRatio = isNaN(newAspectRatio) ? aspectRatio : newAspectRatio;
+
+	const ratio = aspectRatioLocked ? aspectRatio : clamp(correctedAspectRatio, minAspectRatio, maxAspectRatio);
 
 	return 1 / ratio;
 }
@@ -45,6 +48,7 @@ export const getBoxBetween = (pointA, pointB) => ({
 /**
  * Given a point and slope + y-intercept of a line, get the point
  * on the line closest to the target point
+ *
  * @param {Array} point point to look closest to
  * @param {Object} line line to find point on
  * @param {number} line.slope
@@ -90,6 +94,15 @@ export function getNewCrop (point, anchor, crop) {
 		slope: getRatioSlope(point, anchor, crop),
 		yIntercept: 0
 	};
+
+	//if the point is the same as the anchor, return a "unit" box instead
+	//of a zero width/height box;
+	if (point.every((p, i) => p === anchor[i])) {
+		return {
+			width: 1,
+			height: 1 * ratioLine.slope
+		};
+	}
 
 	const targetPoint = getOrthogonalPointProjection(point, ratioLine);
 
