@@ -40,17 +40,35 @@ const scalers = {
 
 		const scale = outputSize.height / layout.canvas.height;
 		return applyScale(layout, scale);
+	},
+
+	maxWidth: (layout, outputSize) => {
+		if (layout.canvas.width <= outputSize.maxWidth) { return layout; }
+
+		const scale = outputSize.maxWidth / layout.canvas.width;
+		return applyScale(layout, scale);
+	},
+
+	width: (layout, outputSize) => {
+		if (layout.canvas.width === outputSize.width) { return layout; }
+
+		const scale = outputSize.width / layout.canvas.height;
+		return applyScale(layout, scale);
 	}
 }
 
 function scaleOutput(layout, outputSize) {
 	if (!outputSize) { return layout; }
 
-	if (outputSize.maxHeight) { return scalers.maxHeight(layout, outputSize); }
-	if (outputSize.height) { return scalers.height(layout, outputSize); }
+	let scaled = layout
 
-	//Throw for non-supported options yet
-	throw new Error('non-supported outputSize option');
+	if (outputSize.maxHeight) { scaled = scalers.maxHeight(layout, outputSize); }
+	if (outputSize.height) { scaled = scalers.height(layout, outputSize); }
+
+	if (outputSize.maxWidth) { scaled = scalers.maxWidth(layout, outputSize); }
+	if (outputSize.width) { scaled = scalers.width(layout, outputSize); }
+
+	return scaled;
 }
 
 export default function getCanvasForEditorState(editorState, outputSize) {
