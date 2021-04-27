@@ -38,7 +38,7 @@ export const getBoxBetween = (pointA, pointB) => ({
 
 	const newAspectRatio = (point[0] - anchor[0]) / (point[1] - anchor[1]);
 	//if we got NaN for the newAspectRatio, use the current aspect ratio
-	const correctedAspectRatio = isNaN(newAspectRatio) ? aspectRatio : newAspectRatio;
+	const correctedAspectRatio = isNaN(newAspectRatio) || newAspectRatio === 0 ? aspectRatio : newAspectRatio;
 
 	const ratio = aspectRatioLocked ? aspectRatio : clamp(correctedAspectRatio, minAspectRatio, maxAspectRatio);
 
