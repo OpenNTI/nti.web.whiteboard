@@ -38,8 +38,8 @@ AssetImageEditor.getStateForAsset = url => {
 		updated: null,
 	};
 };
-AssetImageEditor.getPayload = async ({ updated }) => {
-	const blob = await ImageEditor.getBlobForEditorState(updated);
+AssetImageEditor.getPayload = async ({ updated }, format, output) => {
+	const blob = await ImageEditor.getBlobForEditorState(updated, output);
 
 	return blob;
 };

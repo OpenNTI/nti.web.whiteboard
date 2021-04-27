@@ -2,12 +2,16 @@ export function getFormatForEditor(editor) {
 	return editor.props.format;
 }
 
+export function getOutputForEditor (editor) {
+	return editor.props.output;
+}
+
 export function getStateForEditor(editor, url, raw) {
-	return editor.type.getStateForAsset(url, raw, getFormatForEditor(editor));
+	return editor.type.getStateForAsset(url, raw, getFormatForEditor(editor), getOutputForEditor(editor));
 }
 
 export function getPayloadForEditor(editor, value) {
-	return editor.type.getPayload(value, getFormatForEditor(editor));
+	return editor.type.getPayload(value, getFormatForEditor(editor), getOutputForEditor(editor));
 }
 
 export function getHasUpdateForEditor(editor, value) {
