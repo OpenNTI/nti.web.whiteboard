@@ -1,6 +1,6 @@
 {
   "name": "@nti/web-whiteboard",
-  "version": "0.22.0",
+  "version": "0.23.0-alpha",
   "author": "nextthought",
   "description": "A whiteboard component for ReactJS",
   "license": "UNLICENSED",
