@@ -1,6 +1,7 @@
 import './ImageUpload.scss';
 import React from 'react';
 import PropTypes from 'prop-types';
+import cx from 'classnames';
 
 import { RemoveButton } from '@nti/web-commons';
 import { scoped } from '@nti/lib-locale';
@@ -115,6 +116,10 @@ export default class ImageUpload extends React.Component {
 	}
 
 	render() {
-		return <div className="nti-image-upload">{this.renderImg()}</div>;
+		return (
+			<div className={cx('nti-image-upload', this.props.className)}>
+				{this.renderImg()}
+			</div>
+		);
 	}
 }

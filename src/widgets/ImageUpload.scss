@@ -28,6 +28,14 @@
 		position: relative;
 		margin: 0;
 
+		&:focus-within {
+			box-shadow: 0 0 3px 1px var(--primary-blue);
+		}
+
+		@media (--respond-to-handhelds) {
+			margin-bottom: 10px;
+		}
+
 		.nti-image-editor-upload {
 			height: 132px;
 			width: 200px;
@@ -43,10 +51,7 @@
 					opacity: 0;
 				}
 
-				.title {
-					display: none;
-				}
-
+				.title,
 				.choose-container {
 					display: none;
 				}
@@ -57,6 +62,7 @@
 				}
 			}
 
+			/* nested? */
 			.nti-image-editor-upload .container i {
 				margin-top: 0;
 			}
