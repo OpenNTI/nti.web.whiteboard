@@ -1,9 +1,9 @@
 import './ImageUpload.scss';
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
 
-import { RemoveButton } from '@nti/web-commons';
+import { RemoveButton, useReducerState } from '@nti/web-commons';
 import { scoped } from '@nti/lib-locale';
 
 import { ImageEditor } from '../';
@@ -14,28 +14,27 @@ const t = scoped('whiteboard.widgets.ImageUpload', {
 	addAnImage: 'Add an Image',
 });
 
-export default class ImageUpload extends React.Component {
-	static propTypes = {
-		onChange: PropTypes.func.isRequired,
-		img: PropTypes.object,
-	};
+ImageUpload.propTypes = {
+	onChange: PropTypes.func.isRequired,
+	img: PropTypes.object,
+};
 
-	state = {};
+export default function ImageUpload({ className, onChange, img }) {
+	const [state, setState, reset] = useReducerState({
+		img: null,
+		editorState: null,
+	});
 
-	componentDidMount() {
-		const { img } = this.props;
+	useEffect(() => {
+		setState({ img });
+	}, [img]);
 
-		if (img) {
-			this.setState({ img });
-		}
-	}
-
-	onImageUpload = async editorState => {
+	const onImageUpload = async editorState => {
 		const img = await ImageEditor.getImageForEditorState(editorState);
-
-		this.setState({ editorState: img }, () => {
+		setState({ editorState: img });
+		try {
 			// match aspectRatio to the dimensions of the image in event overview list items
-			EditImage.show(
+			const newEditorState = await EditImage.show(
 				ImageEditor.getEditorState(img, {
 					crop: {
 						aspectRatio: 208 / 117,
@@ -43,83 +42,53 @@ export default class ImageUpload extends React.Component {
 						height: img.naturalHeight,
 					},
 				})
-			)
-				.then(newEditorState => {
-					ImageEditor.getImageForEditorState(newEditorState).then(
-						newImg => {
-							this.onImageCropperSave(newImg, newEditorState);
-						}
-					);
-				})
-				.catch(() => {
-					this.setState({ editorState: null });
-				});
-		});
+			);
+
+			const newImage = await ImageEditor.getImageForEditorState(
+				newEditorState
+			);
+
+			setState({ img: newImage, croppedImageState: newEditorState });
+			onChange(await getBlobForImage(newImage, newEditorState));
+		} catch {
+			setState({ editorState: null });
+		}
 	};
 
-	onImageCropperSave = async (img, croppedImageState) => {
-		this.setState({ img, croppedImageState });
-
-		const blob = await this.getBlobForImage();
-
-		this.props.onChange(blob);
-	};
-
-	renderImg() {
-		if (!this.state.img && !this.state.editorState) {
-			return (
+	return (
+		<div className={cx('nti-image-upload', className)}>
+			{!state.img && !state.editorState ? (
 				<div className="image-upload-container">
-					<ImageEditor.Editor onChange={this.onImageUpload} />
+					<ImageEditor.Editor onChange={onImageUpload} />
 					<div className="content">
 						<i className="icon-upload" />
 						<div className="text">{t('addAnImage')}</div>
 					</div>
 				</div>
-			);
-		}
-
-		if (this.state.img) {
-			return (
+			) : img ? (
 				<div className="image-preview">
-					<img src={this.state.img.src} />
+					<img src={state.img?.src} />
 					<div className="remove-image">
 						<RemoveButton
 							onRemove={() => {
-								this.setState({ img: null, editorState: null });
+								reset();
 
-								this.props.onChange(null);
+								onChange(null);
 							}}
 						/>
 					</div>
 				</div>
-			);
-		}
-	}
+			) : null}
+		</div>
+	);
+}
 
-	async getBlobForImage() {
-		const { croppedImageState, img } = this.state;
+async function getBlobForImage(img, croppedImageState) {
+	const dataBlob = await (croppedImageState
+		? ImageEditor.getBlobForEditorState(croppedImageState)
+		: null);
 
-		const request = croppedImageState
-			? ImageEditor.getBlobForEditorState(croppedImageState)
-			: Promise.resolve();
-
-		const dataBlob = await request;
-		let blobValue = null;
-
-		if (img && !dataBlob) {
-			blobValue = undefined; // an image was provided, but no changes were made
-		} else {
-			blobValue = dataBlob || null;
-		}
-
-		return blobValue;
-	}
-
-	render() {
-		return (
-			<div className={cx('nti-image-upload', this.props.className)}>
-				{this.renderImg()}
-			</div>
-		);
-	}
+	return img && !dataBlob
+		? undefined // an image was provided, but no changes were made
+		: dataBlob || null;
 }
