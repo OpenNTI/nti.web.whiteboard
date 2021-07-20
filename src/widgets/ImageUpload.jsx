@@ -65,9 +65,9 @@ export default function ImageUpload({ className, onChange, img }) {
 						<div className="text">{t('addAnImage')}</div>
 					</div>
 				</div>
-			) : img ? (
+			) : state.img ? (
 				<div className="image-preview">
-					<img src={state.img?.src} />
+					<img src={state.img.src} />
 					<div className="remove-image">
 						<RemoveButton
 							onRemove={() => {
