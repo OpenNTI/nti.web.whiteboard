@@ -1,5 +1,9 @@
-import format from './format';
+import Control from './control';
+import draw from './draw';
+import output from './output';
 
 export default {
-	format,
+	Control,
+	draw,
+	output,
 };
