@@ -2,7 +2,7 @@ import { Crop, Rotate, Blur, Darken } from '../tools';
 
 const TOOLS = [Crop, Rotate, Darken, Blur];
 
-function applyScale (layout, imgScale) {
+function applyScale(layout, imgScale) {
 	const scale = x => x * imgScale;
 
 	return {
@@ -29,44 +29,62 @@ function scaleLayout(layout) {
 
 const scalers = {
 	maxHeight: (layout, outputSize) => {
-		if (layout.canvas.height <= outputSize.maxHeight) { return layout; }
+		if (layout.canvas.height <= outputSize.maxHeight) {
+			return layout;
+		}
 
 		const scale = outputSize.maxHeight / layout.canvas.height;
 		return applyScale(layout, scale);
 	},
 
 	height: (layout, outputSize) => {
-		if (layout.canvas.height === outputSize.height) { return layout; }
+		if (layout.canvas.height === outputSize.height) {
+			return layout;
+		}
 
 		const scale = outputSize.height / layout.canvas.height;
 		return applyScale(layout, scale);
 	},
 
 	maxWidth: (layout, outputSize) => {
-		if (layout.canvas.width <= outputSize.maxWidth) { return layout; }
+		if (layout.canvas.width <= outputSize.maxWidth) {
+			return layout;
+		}
 
 		const scale = outputSize.maxWidth / layout.canvas.width;
 		return applyScale(layout, scale);
 	},
 
 	width: (layout, outputSize) => {
-		if (layout.canvas.width === outputSize.width) { return layout; }
+		if (layout.canvas.width === outputSize.width) {
+			return layout;
+		}
 
 		const scale = outputSize.width / layout.canvas.height;
 		return applyScale(layout, scale);
-	}
-}
+	},
+};
 
 function scaleOutput(layout, outputSize) {
-	if (!outputSize) { return layout; }
+	if (!outputSize) {
+		return layout;
+	}
 
-	let scaled = layout
+	let scaled = layout;
 
-	if (outputSize.maxHeight) { scaled = scalers.maxHeight(layout, outputSize); }
-	if (outputSize.height) { scaled = scalers.height(layout, outputSize); }
+	if (outputSize.maxHeight) {
+		scaled = scalers.maxHeight(layout, outputSize);
+	}
+	if (outputSize.height) {
+		scaled = scalers.height(layout, outputSize);
+	}
 
-	if (outputSize.maxWidth) { scaled = scalers.maxWidth(layout, outputSize); }
-	if (outputSize.width) { scaled = scalers.width(layout, outputSize); }
+	if (outputSize.maxWidth) {
+		scaled = scalers.maxWidth(layout, outputSize);
+	}
+	if (outputSize.width) {
+		scaled = scalers.width(layout, outputSize);
+	}
 
 	return scaled;
 }
@@ -119,6 +137,11 @@ export default function getCanvasForEditorState(editorState, outputSize) {
 	}
 
 	ctx.save();
+	for (let tool of TOOLS) {
+		if (tool.output && tool.output.applyImageTransform) {
+			tool.output.applyImageTransform(ctx, formatting, layout, canvas);
+		}
+	}
 	ctx.drawImage(
 		outputLayout.image.src,
 		outputLayout.image.x,
