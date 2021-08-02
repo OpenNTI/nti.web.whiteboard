@@ -19,12 +19,12 @@ export function getImgSrc(file) {
 	});
 }
 
-export function getImg (src) {
+export function getImg(src) {
 	return new Promise((fulfill, reject) => {
 		const img = new Image();
 
 		img.onload = () => fulfill(img);
-		img.onerror = (e) => reject(e);
+		img.onerror = e => reject(e);
 
 		img.src = src;
 	});
@@ -33,11 +33,12 @@ export function getImg (src) {
 export function getLayoutFor(img, size) {
 	const imgSize = { height: img.height, width: img.width };
 	const canvasSize = { height: size.height, width: size.width };
-	const scale = img.width / canvasSize.width;
+	let scale = img.width / canvasSize.width;
 
 	if (imgSize.width > canvasSize.width) {
 		imgSize.width = Math.round(imgSize.width / scale);
 		imgSize.height = Math.round(imgSize.height / scale);
+		scale = 1;
 	}
 
 	canvasSize.width = imgSize.width;
