@@ -28,20 +28,19 @@ function getRotateDegrees(editorState) {
 }
 
 function setRotateDegrees(editorState, degrees) {
+	const vertical = degrees === 90 || degrees === 270;
+
+	const width = editorState?.layout?.image.width;
+	const height = editorState?.layout?.image.height;
+
 	return {
 		...(editorState || {}),
 		layout: {
 			...editorState?.layout,
 			canvas: {
 				...editorState?.layout?.canvas,
-				width:
-					degrees % 180 === 0
-						? editorState?.layout?.image.width
-						: editorState?.layout?.image.height,
-				height:
-					degrees % 180 === 0
-						? editorState?.layout?.image.height
-						: editorState?.layout?.image.width,
+				width: vertical ? height : width,
+				height: vertical ? width : height,
 			},
 		},
 		formatting: {

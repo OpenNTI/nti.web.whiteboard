@@ -93,7 +93,14 @@ export default function getCanvasForEditorState(editorState, outputSize) {
 	const canvas = document.createElement('canvas');
 	const ctx = canvas.getContext('2d');
 
-	const { layout, formatting, image } = editorState;
+	const { layout, formatting: incomingFormatting, image } = editorState;
+
+	const formatting = TOOLS.reduce((previous, tool) => {
+		if (tool.output && tool.output.fixFormatting) {
+			return tool.output.fixFormatting(formatting, layout);
+		}
+		return previous;
+	}, incomingFormatting);
 
 	if (!image) {
 		return null;
