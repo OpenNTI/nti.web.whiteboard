@@ -89,18 +89,18 @@ function scaleOutput(layout, outputSize) {
 	return scaled;
 }
 
-export default function getCanvasForEditorState(editorState, outputSize) {
+export default function getCanvasForEditorState(editorStateArg, outputSize) {
 	const canvas = document.createElement('canvas');
 	const ctx = canvas.getContext('2d');
 
-	const { layout, formatting: incomingFormatting, image } = editorState;
-
-	const formatting = TOOLS.reduce((previous, tool) => {
-		if (tool.output && tool.output.fixFormatting) {
-			return tool.output.fixFormatting(formatting, layout);
+	const editorState = TOOLS.reduce((acc, tool) => {
+		if (tool.output && tool.output.fixEditorState) {
+			return tool.output.fixEditorState(acc);
 		}
-		return previous;
-	}, incomingFormatting);
+		return acc;
+	}, editorStateArg);
+
+	const { layout, formatting, image } = editorState;
 
 	if (!image) {
 		return null;
@@ -144,11 +144,6 @@ export default function getCanvasForEditorState(editorState, outputSize) {
 	}
 
 	ctx.save();
-	for (let tool of TOOLS) {
-		if (tool.output && tool.output.applyImageTransform) {
-			tool.output.applyImageTransform(ctx, formatting, layout, canvas);
-		}
-	}
 	ctx.drawImage(
 		outputLayout.image.src,
 		outputLayout.image.x,
