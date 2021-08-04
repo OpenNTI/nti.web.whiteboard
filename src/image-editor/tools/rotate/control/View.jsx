@@ -98,10 +98,18 @@ export default function RotateControl({ editorState, setEditorState }) {
 
 	return (
 		<Control label={t('label')}>
-			<Button onClick={rotateAnticlockwise} secondary>
+			<Button
+				onClick={rotateAnticlockwise}
+				data-testid="rotate-anti-btn"
+				secondary
+			>
 				<AnticlockwiseIcon />
 			</Button>
-			<Button onClick={rotateClockwise} secondary>
+			<Button
+				onClick={rotateClockwise}
+				data-testid="rotate-btn"
+				secondary
+			>
 				<ClockwiseIcon />
 			</Button>
 		</Control>
