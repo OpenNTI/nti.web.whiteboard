@@ -27,11 +27,26 @@ function getRotateDegrees(editorState) {
 	return editorState?.formatting?.rotate?.degrees;
 }
 
-function setRotateDegrees(editorState, degrees) {
-	const vertical = degrees === 90 || degrees === 270;
+function setRotateDegrees(editorState, degrees, anticlockwise) {
+	const widthCanvas = editorState?.layout?.canvas.width;
+	const heightCanvas = editorState?.layout?.canvas.height;
+	const {
+		formatting: { crop },
+	} = editorState;
+	let newX, newY;
 
-	const width = editorState?.layout?.image.width;
-	const height = editorState?.layout?.image.height;
+	/**
+	 * The code below is responsible for making sure that we crop the same area while rotating.
+	 * If you want to understand it, I suggest you draw a set of coordinates and test it for
+	 * yourself. This breaks the separation of concerns for the tools, but oh well.
+	 */
+	if (anticlockwise) {
+		newX = widthCanvas - (crop.x + crop.width);
+		newY = crop.y;
+	} else {
+		newX = heightCanvas - (crop.y + crop.height);
+		newY = crop.x;
+	}
 
 	return {
 		...(editorState || {}),
@@ -39,12 +54,19 @@ function setRotateDegrees(editorState, degrees) {
 			...editorState?.layout,
 			canvas: {
 				...editorState?.layout?.canvas,
-				width: vertical ? height : width,
-				height: vertical ? width : height,
+				width: heightCanvas,
+				height: widthCanvas,
 			},
 		},
 		formatting: {
 			...((editorState && editorState.formatting) || {}),
+			crop: {
+				...crop,
+				x: newX,
+				y: newY,
+				height: crop.width,
+				width: crop.height,
+			},
 			rotate: {
 				...((editorState &&
 					editorState.formatting &&
@@ -69,7 +91,9 @@ export default function RotateControl({ editorState, setEditorState }) {
 	};
 
 	const rotateAnticlockwise = () => {
-		setEditorState(setRotateDegrees(editorState, (degrees + 270) % 360));
+		setEditorState(
+			setRotateDegrees(editorState, (degrees + 270) % 360, true)
+		);
 	};
 
 	return (
