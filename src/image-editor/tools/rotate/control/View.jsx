@@ -19,7 +19,7 @@ const ClockwiseIcon = styled.span`
 	background-position: center;
 `;
 
-const AnticlockwiseIcon = styled(ClockwiseIcon)`
+const CounterclockwiseIcon = styled(ClockwiseIcon)`
 	transform: scaleX(-1);
 `;
 
@@ -27,7 +27,7 @@ function getRotateDegrees(editorState) {
 	return editorState?.formatting?.rotate?.degrees;
 }
 
-function setRotateDegrees(editorState, degrees, anticlockwise) {
+function setRotateDegrees(editorState, degrees, counterclockwise) {
 	const widthCanvas = editorState?.layout?.canvas.width;
 	const heightCanvas = editorState?.layout?.canvas.height;
 	const {
@@ -40,7 +40,7 @@ function setRotateDegrees(editorState, degrees, anticlockwise) {
 	 * If you want to understand it, I suggest you draw a set of coordinates and test it for
 	 * yourself. This breaks the separation of concerns for the tools, but oh well.
 	 */
-	if (anticlockwise) {
+	if (counterclockwise) {
 		newY = widthCanvas - (crop.x + crop.width);
 		newX = crop.y;
 	} else {
@@ -100,10 +100,10 @@ export default function RotateControl({ editorState, setEditorState }) {
 		<Control label={t('label')}>
 			<Button
 				onClick={rotateAnticlockwise}
-				data-testid="rotate-anti-btn"
+				data-testid="rotate-counter-btn"
 				secondary
 			>
-				<AnticlockwiseIcon />
+				<CounterclockwiseIcon />
 			</Button>
 			<Button
 				onClick={rotateClockwise}

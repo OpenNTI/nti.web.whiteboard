@@ -58,7 +58,7 @@ test('Rotate Control Test', () => {
 		},
 	});
 
-	fireEvent.click(component.getByTestId('rotate-anti-btn'));
+	fireEvent.click(component.getByTestId('rotate-counter-btn'));
 
 	expect(setEditorState).toHaveBeenCalledTimes(2);
 	expect(newEditorState).toEqual({
