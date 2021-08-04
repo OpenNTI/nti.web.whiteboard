@@ -144,9 +144,7 @@ export default class ImageEditor extends React.Component {
 
 		ctx.save();
 		for (let tool of TOOLS) {
-			if (tool.draw && tool.draw.applyImageTransform) {
-				tool.draw.applyImageTransform(ctx, formatting, layout);
-			}
+			tool?.draw?.applyImageTransform?.(ctx, formatting, layout);
 		}
 		ctx.drawImage(
 			layout.image.src,

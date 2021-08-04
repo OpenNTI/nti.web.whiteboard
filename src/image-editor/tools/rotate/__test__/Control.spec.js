@@ -70,8 +70,8 @@ test('Rotate Control Test', () => {
 		},
 		formatting: {
 			crop: {
-				x: 150,
-				y: 0,
+				x: 0,
+				y: 150,
 				height: 50,
 				width: 50,
 			},

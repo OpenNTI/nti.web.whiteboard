@@ -41,8 +41,8 @@ function setRotateDegrees(editorState, degrees, anticlockwise) {
 	 * yourself. This breaks the separation of concerns for the tools, but oh well.
 	 */
 	if (anticlockwise) {
-		newX = widthCanvas - (crop.x + crop.width);
-		newY = crop.y;
+		newY = widthCanvas - (crop.x + crop.width);
+		newX = crop.y;
 	} else {
 		newX = heightCanvas - (crop.y + crop.height);
 		newY = crop.x;
