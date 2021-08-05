@@ -42,7 +42,7 @@ export default function fixCropFormatting(formatting, layout) {
 
 	if (width && !height) {
 		height = getHeight(width, height);
-	} else if (height) {
+	} else if (height && !width) {
 		width = getWidth(height, width);
 	}
 
