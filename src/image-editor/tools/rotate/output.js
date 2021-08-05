@@ -1,7 +1,17 @@
 import { getLayoutFor } from '../../utils';
+
+const switchImageDimensions = (degrees, image) => {
+	const vertical = degrees === 90 || degrees === 270;
+
+	const width = vertical ? image.height : image.width;
+	const height = vertical ? image.width : image.height;
+
+	return { width, height };
+};
+
 export default {
 	/**
-	 * This method creates an entirely new rotate image and accordingly updates
+	 * This method creates an entirely new rotated image and accordingly updates
 	 * the editor state's image source with the aforementioned rotated image.
 	 * This helps us separate the rotate tool from other tools.
 	 *
@@ -21,12 +31,7 @@ export default {
 		const canvas = document.createElement('canvas');
 		const ctx = canvas.getContext('2d');
 
-		const { degrees } = rotate;
-
-		const vertical = degrees === 90 || degrees === 270;
-
-		const width = vertical ? image.height : image.width;
-		const height = vertical ? image.width : image.height;
+		const { width, height } = switchImageDimensions(rotate.degrees, image);
 
 		canvas.width = width;
 		canvas.height = height;
