@@ -6,10 +6,9 @@ import { getLayoutFor } from './utils';
 import Upload from './Upload';
 import { Crop, Rotate, Blur, Darken } from './tools';
 import Toolbar from './tool-bar';
+import { CANVAS_PADDING } from './Constants';
 
 const TOOLS = [Blur, Darken, Crop, Rotate];
-
-const CANVAS_PADDING = 20;
 
 export default class ImageEditor extends React.Component {
 	static Controls = Toolbar.Controls;
@@ -41,9 +40,10 @@ export default class ImageEditor extends React.Component {
 		this.canvasListeners = {};
 
 		for (let tool of TOOLS) {
-			for (let listener of (tool.listeners ?? [])) {
+			for (let listener of tool.listeners ?? []) {
 				if (!this.canvasListeners[listener]) {
-					this.canvasListeners[listener] = this.buildCanvasListener(listener);
+					this.canvasListeners[listener] =
+						this.buildCanvasListener(listener);
 				}
 			}
 		}
@@ -107,12 +107,6 @@ export default class ImageEditor extends React.Component {
 
 		let { formatting, layout, image, filename } = this.currentState;
 
-		// for (let tool of TOOLS) {
-		// 	if (tool.output && tool.output.fixFormatting) {
-		// 		formatting = tool.output.fixFormatting(formatting, layout);
-		// 	}
-		// }
-
 		if (onChange) {
 			onChange({ formatting, layout, image, filename });
 		}
@@ -149,6 +143,9 @@ export default class ImageEditor extends React.Component {
 		}
 
 		ctx.save();
+		for (let tool of TOOLS) {
+			tool?.draw?.applyImageTransform?.(ctx, formatting, layout);
+		}
 		ctx.drawImage(
 			layout.image.src,
 			layout.image.x,
@@ -231,8 +228,8 @@ export default class ImageEditor extends React.Component {
 		});
 	};
 
-	buildCanvasListener (name) {
-		return (e) => {
+	buildCanvasListener(name) {
+		return e => {
 			e.stopPropagation();
 			e.preventDefault();
 
@@ -244,8 +241,8 @@ export default class ImageEditor extends React.Component {
 					padding: CANVAS_PADDING,
 					formatting: this.currentFormatting,
 					layout: this.currentLayout,
-					setEditorState: this.setEditorState
-				}
+					setEditorState: this.setEditorState,
+				},
 			];
 
 			activeControl?.[name]?.(...eventArgs);

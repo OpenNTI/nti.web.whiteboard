@@ -15,41 +15,44 @@ export default function fixCropFormatting(formatting, layout) {
 		width,
 		height,
 		x = 0,
-		y = 0
+		y = 0,
 	} = crop;
 
 	const effectiveAspectRatio = clamp(
-		aspectRatio ?? (layout.image.width / layout.image.height),
+		aspectRatio ?? layout.canvas.width / layout.canvas.height,
 		minAspectRatio ?? -Infinity,
 		maxAspectRatio ?? Infinity
 	);
 
-
 	function getHeight(w, fallback) {
-		return effectiveAspectRatio ? Math.ceil(w / effectiveAspectRatio) : fallback;
+		return effectiveAspectRatio
+			? Math.ceil(w / effectiveAspectRatio)
+			: fallback;
 	}
 
 	function getWidth(h, fallback) {
-		return effectiveAspectRatio ? Math.ceil(h * effectiveAspectRatio) : fallback;
+		return effectiveAspectRatio
+			? Math.ceil(h * effectiveAspectRatio)
+			: fallback;
 	}
 
 	if (!width && !height) {
-		width = layout.image.width;
+		width = layout.canvas.width;
 	}
 
 	if (width && !height) {
 		height = getHeight(width, height);
-	} else if (height) {
+	} else if (height && !width) {
 		width = getWidth(height, width);
 	}
 
-	if (x + width > layout.image.width) {
-		width = layout.image.width - x;
+	if (x + width > layout.canvas.width) {
+		width = layout.canvas.width - x;
 		height = getHeight(width, height);
 	}
 
-	if (y + height > layout.image.height) {
-		height = layout.image.height - y;
+	if (y + height > layout.canvas.height) {
+		height = layout.canvas.height - y;
 		width = getWidth(height, width);
 	}
 
@@ -63,7 +66,7 @@ export default function fixCropFormatting(formatting, layout) {
 			aspectRatio: effectiveAspectRatio,
 			aspectRatioLocked: aspectRatio != null,
 			maxAspectRatio,
-			minAspectRatio
+			minAspectRatio,
 		},
 	};
 }

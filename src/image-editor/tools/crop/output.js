@@ -38,21 +38,4 @@ export default {
 			},
 		};
 	},
-
-	fixFormatting(formatting, layout) {
-		const { crop } = formatting;
-
-		if (!crop) {
-			return formatting;
-		}
-
-		return {
-			...formatting,
-			crop: {
-				...crop,
-				x: -crop.x,
-				y: -crop.y,
-			},
-		};
-	},
 };
