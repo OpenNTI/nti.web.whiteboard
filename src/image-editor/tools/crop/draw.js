@@ -23,8 +23,8 @@ export default {
 		layerCtx.fillRect(
 			layout.image.x,
 			layout.image.y,
-			layout.canvas.width,
-			layout.canvas.height
+			layout.image.width,
+			layout.image.height
 		);
 		layerCtx.restore();
 
