@@ -19,7 +19,7 @@ export default function fixCropFormatting(formatting, layout) {
 	} = crop;
 
 	const effectiveAspectRatio = clamp(
-		aspectRatio ?? layout.canvas.width / layout.canvas.height,
+		aspectRatio ?? layout.image.width / layout.image.height,
 		minAspectRatio ?? -Infinity,
 		maxAspectRatio ?? Infinity
 	);
@@ -37,7 +37,7 @@ export default function fixCropFormatting(formatting, layout) {
 	}
 
 	if (!width && !height) {
-		width = layout.canvas.width;
+		width = layout.image.width;
 	}
 
 	if (width && !height) {
@@ -46,13 +46,13 @@ export default function fixCropFormatting(formatting, layout) {
 		width = getWidth(height, width);
 	}
 
-	if (x + width > layout.canvas.width) {
-		width = layout.canvas.width - x;
+	if (x + width > layout.image.width) {
+		width = layout.image.width - x;
 		height = getHeight(width, height);
 	}
 
-	if (y + height > layout.canvas.height) {
-		height = layout.canvas.height - y;
+	if (y + height > layout.image.height) {
+		height = layout.image.height - y;
 		width = getWidth(height, width);
 	}
 
