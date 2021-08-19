@@ -96,10 +96,7 @@ export default function getCanvasForEditorState(editorStateArg, outputSize) {
 	// ctx.imageSmoothingEnabled = false;
 
 	const editorState = TOOLS.reduce((acc, tool) => {
-		if (tool.output && tool.output.fixEditorState) {
-			return tool.output.fixEditorState(acc);
-		}
-		return acc;
+		return tool.output?.fixEditorState?.(acc) ?? acc;
 	}, editorStateArg);
 
 	const { layout, formatting, image } = editorState;
