@@ -33,7 +33,7 @@ export function getImg(src) {
 export function getLayoutFor(img, size) {
 	const imgSize = { height: img.height, width: img.width };
 	const canvasSize = { height: size.height, width: size.width };
-	let scale = img.width / canvasSize.width;
+	const scale = img.width / canvasSize.width;
 
 	if (imgSize.width > canvasSize.width) {
 		imgSize.width = Math.round(imgSize.width / scale);
