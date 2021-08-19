@@ -62,7 +62,7 @@ export const ImageEditor = props => {
 				/>
 			</div>
 			<div>
-				<h1>Display</h1>
+				<h1>Result</h1>
 				{src && (
 					<img
 						src={src}
