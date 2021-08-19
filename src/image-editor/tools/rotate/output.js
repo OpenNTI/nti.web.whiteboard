@@ -30,6 +30,8 @@ export default {
 
 		const canvas = document.createElement('canvas');
 		const ctx = canvas.getContext('2d');
+		ctx.imageSmoothingQuality = 'high';
+		// ctx.imageSmoothingEnabled = false;
 
 		const { width, height } = switchImageDimensions(rotate.degrees, image);
 

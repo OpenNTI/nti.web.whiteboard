@@ -10,6 +10,8 @@ export default {
 
 		const layer = getLayerFor('crop');
 		const layerCtx = layer.getContext('2d');
+		layerCtx.imageSmoothingQuality = 'high';
+		// layerCtx.imageSmoothingEnabled = false;
 
 		//Draw the mask as a layer
 		layer.width = layout.canvas.width;

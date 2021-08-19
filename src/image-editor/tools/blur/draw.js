@@ -23,6 +23,8 @@ export default {
 			layer.setAttribute('data-blur-hash', hash);
 
 			const layerCtx = layer.getContext('2d');
+			layerCtx.imageSmoothingQuality = 'high';
+			// layerCtx.imageSmoothingEnabled = false;
 
 			layer.width = layout.canvas.width;
 			layer.height = layout.canvas.height;

@@ -13,6 +13,8 @@ export default {
 
 		const layer = getLayer('darken');
 		const layerCtx = layer.getContext('2d');
+		layerCtx.imageSmoothingQuality = 'high';
+		// layerCtx.imageSmoothingEnabled = false;
 
 		layer.width = layout.canvas.width;
 		layer.height = layout.canvas.height;

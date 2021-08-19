@@ -124,6 +124,8 @@ export default class ImageEditor extends React.Component {
 		} = this;
 		const { activeTool } = this.state;
 		const ctx = canvas.getContext('2d');
+		ctx.imageSmoothingQuality = 'high';
+		// ctx.imageSmoothingEnabled = false;
 
 		const padding = 2 * CANVAS_PADDING;
 		const { width, height } = layout.canvas;

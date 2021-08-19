@@ -10,6 +10,8 @@ export default {
 
 		const layer = document.createElement('canvas');
 		const layerCtx = layer.getContext('2d');
+		layerCtx.imageSmoothingQuality = 'high';
+		// layerCtx.imageSmoothingEnabled = false;
 
 		layer.width = layout.canvas.width;
 		layer.height = layout.canvas.height;

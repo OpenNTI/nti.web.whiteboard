@@ -110,6 +110,8 @@ export default class ImageEditorDisplay extends React.Component {
 		}
 
 		const ctx = this.canvas.getContext('2d');
+		ctx.imageSmoothingQuality = 'high';
+		// ctx.imageSmoothingEnabled = false;
 		const { layout } = editorState;
 
 		//reset the canvas
