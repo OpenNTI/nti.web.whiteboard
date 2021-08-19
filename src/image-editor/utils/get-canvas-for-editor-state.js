@@ -92,6 +92,8 @@ function scaleOutput(layout, outputSize) {
 export default function getCanvasForEditorState(editorStateArg, outputSize) {
 	const canvas = document.createElement('canvas');
 	const ctx = canvas.getContext('2d');
+	ctx.imageSmoothingQuality = 'high';
+	// ctx.imageSmoothingEnabled = false;
 
 	const editorState = TOOLS.reduce((acc, tool) => {
 		if (tool.output && tool.output.fixEditorState) {
