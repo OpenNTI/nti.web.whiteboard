@@ -24,7 +24,7 @@ export default {
 			formatting: { rotate },
 		} = editorState;
 
-		if (!rotate) {
+		if (!rotate?.degrees) {
 			return editorState;
 		}
 
