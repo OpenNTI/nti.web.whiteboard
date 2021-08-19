@@ -38,8 +38,8 @@ export const ImageEditor = props => {
 	const ref = useRef();
 	const [src, setSrc] = useState(null);
 	const onChange = useCallback(editorState => {
-		cancelAnimationFrame(ref.current);
-		ref.current = requestAnimationFrame(async () => {
+		clearTimeout(ref.current);
+		ref.current = setTimeout(async () => {
 			try {
 				const img = getImageForEditorState(editorState);
 				setSrc((await img)?.src);
@@ -47,7 +47,7 @@ export const ImageEditor = props => {
 				// eslint-disable-next-line no-console
 				console.debug(e?.stack || e);
 			}
-		});
+		}, 10);
 	}, []);
 
 	return (
