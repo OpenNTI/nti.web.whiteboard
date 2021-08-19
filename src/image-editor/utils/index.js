@@ -38,7 +38,6 @@ export function getLayoutFor(img, size) {
 	if (imgSize.width > canvasSize.width) {
 		imgSize.width = Math.round(imgSize.width / scale);
 		imgSize.height = Math.round(imgSize.height / scale);
-		scale = 1;
 	}
 
 	canvasSize.width = imgSize.width;
