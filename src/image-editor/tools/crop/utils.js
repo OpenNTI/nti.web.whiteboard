@@ -11,11 +11,12 @@ export const clamp = (d, min, max) => Math.min(Math.max(d, min), max);
  * @param {Array} anchor new origin
  * @returns {Array} target relative to anchor being the new origin
  */
-export const getPointRelative = (target, anchor) => target.map((t, i) => Math.abs(t - anchor[i]));
+export const getPointRelative = (target, anchor) =>
+	target.map((t, i) => Math.abs(t - anchor[i]));
 
 export const getBoxBetween = (pointA, pointB) => ({
 	width: Math.abs(pointA[0] - pointB[0]),
-	height: Math.abs(pointA[1] - pointB[1])
+	height: Math.abs(pointA[1] - pointB[1]),
 });
 
 /**
@@ -27,20 +28,25 @@ export const getBoxBetween = (pointA, pointB) => ({
  * @param {Object} crop the config passed to the cropping tool
  * @returns {number} the slope of the line all valid aspect ratios will be on
  */
- export function getRatioSlope (point, anchor, crop) {
+export function getRatioSlope(point, anchor, crop) {
 	const {
 		aspectRatio,
 		aspectRatioLocked,
 
 		minAspectRatio = -Infinity,
-		maxAspectRatio = Infinity
+		maxAspectRatio = Infinity,
 	} = crop;
 
 	const newAspectRatio = (point[0] - anchor[0]) / (point[1] - anchor[1]);
 	//if we got NaN for the newAspectRatio, use the current aspect ratio
-	const correctedAspectRatio = isNaN(newAspectRatio) || newAspectRatio === 0 ? aspectRatio : newAspectRatio;
+	const correctedAspectRatio =
+		isNaN(newAspectRatio) || newAspectRatio === 0
+			? aspectRatio
+			: newAspectRatio;
 
-	const ratio = aspectRatioLocked ? aspectRatio : clamp(correctedAspectRatio, minAspectRatio, maxAspectRatio);
+	const ratio = aspectRatioLocked
+		? aspectRatio
+		: clamp(correctedAspectRatio, minAspectRatio, maxAspectRatio);
 
 	return 1 / ratio;
 }
@@ -55,18 +61,19 @@ export const getBoxBetween = (pointA, pointB) => ({
  * @param {number} line.yIntercept
  * @returns {Array} the closest point on line to the target point
  */
-export function getOrthogonalPointProjection (point, line) {
-	const {slope, yIntercept} = line;
+export function getOrthogonalPointProjection(point, line) {
+	const { slope, yIntercept } = line;
 
 	const orthogonalSlope = -1 / slope;
 	//compute the y-intercept of the orthogonal line
 	//y = m*x + b => b = y - m*x
-	const orthogonalYIntercept = point[1] - (orthogonalSlope * point[0]);
+	const orthogonalYIntercept = point[1] - orthogonalSlope * point[0];
 
 	//compute the x point when the ys are equal
 	// ratioSlope * x + ratioYIntercept = orthogonalSlope * x + orthogonalYIntercept
 	// m*x + b = m`*x + b` => m*x - m`*x = b` - b => (m - m`)*x = b` - b => x = (b` - b) / (r - o)
-	const intersectionX = (orthogonalYIntercept - yIntercept) / (slope - orthogonalSlope);
+	const intersectionX =
+		(orthogonalYIntercept - yIntercept) / (slope - orthogonalSlope);
 	const intersectionY = slope * intersectionX + yIntercept; //y = mx + b
 
 	return [intersectionX, intersectionY];
@@ -74,12 +81,13 @@ export function getOrthogonalPointProjection (point, line) {
 
 /**
  * Given two points, find a box that goes through anchor and is as close to point as the crop config allows
+ *
  * @param {Array} point the point to try and get the box close to
  * @param {Array} anchor the point the box starts on
  * @param {Object} crop config passed to the crop tool
  * @returns {Object} the {width, height} of the best fitting box
  */
-export function getNewCrop (point, anchor, crop) {
+export function getNewCrop(point, anchor, crop) {
 	/*
 		Outline:
 
@@ -92,7 +100,7 @@ export function getNewCrop (point, anchor, crop) {
 	*/
 	const ratioLine = {
 		slope: getRatioSlope(point, anchor, crop),
-		yIntercept: 0
+		yIntercept: 0,
 	};
 
 	//if the point is the same as the anchor, return a "unit" box instead
@@ -100,7 +108,7 @@ export function getNewCrop (point, anchor, crop) {
 	if (point.every((p, i) => p === anchor[i])) {
 		return {
 			width: 1,
-			height: 1 * ratioLine.slope
+			height: 1 * ratioLine.slope,
 		};
 	}
 
@@ -117,16 +125,19 @@ export function getNewCrop (point, anchor, crop) {
  * @param {Object} maxSize the max size the box can be
  * @returns {Object}
  */
-export function constrainBox (box, minSize, maxSize) {
+export function constrainBox(box, minSize, maxSize) {
 	const ratio = box.width / box.height;
-	const getAdjusted = (size) => ({
+	const getAdjusted = size => ({
 		width: size.height * ratio,
-		height: size.width / ratio
+		height: size.width / ratio,
 	});
 
-	const constrained = {...box};
+	const constrained = { ...box };
 
-	if (constrained.height < minSize.height || constrained.width < minSize.width) {
+	if (
+		constrained.height < minSize.height ||
+		constrained.width < minSize.width
+	) {
 		const adjusted = getAdjusted(minSize);
 
 		if (adjusted.height >= minSize.height) {
@@ -138,7 +149,10 @@ export function constrainBox (box, minSize, maxSize) {
 		}
 	}
 
-	if (constrained.height > maxSize.height || constrained.width > maxSize.width) {
+	if (
+		constrained.height > maxSize.height ||
+		constrained.width > maxSize.width
+	) {
 		const adjusted = getAdjusted(maxSize);
 
 		if (adjusted.height <= maxSize.height) {

@@ -1,17 +1,13 @@
-import { CORNER_RADIUS } from './Constants';
-import {
-	getPointRelative,
-	getNewCrop,
-	constrainBox
-} from './utils';
+import { CORNER_RADIUS } from './constants';
+import { getPointRelative, getNewCrop, constrainBox } from './utils';
 
 function getPointForEvent(e, canvas, padding) {
-	const {clientX, clientY} = e;
+	const { clientX, clientY } = e;
 	const canvasRect = canvas.getBoundingClientRect();
 
 	return [
 		clientX - canvasRect.left - padding,
-		clientY - canvasRect.top - padding
+		clientY - canvasRect.top - padding,
 	];
 }
 
@@ -65,24 +61,19 @@ function getSizingConstraints(crop, frame) {
 	return {
 		minSize: {
 			width: Math.max(crop.minSize?.width ?? -Infinity, 14),
-			height: Math.max(crop.minSize?.height ?? -Infinity, 14)
+			height: Math.max(crop.minSize?.height ?? -Infinity, 14),
 		},
 		maxSize: {
 			width: Math.min(crop.maxSize?.width ?? Infinity, frame.width),
-			height: Math.min(crop.maxSize?.height ?? Infinity, frame.height)
-		}
+			height: Math.min(crop.maxSize?.height ?? Infinity, frame.height),
+		},
 	};
 }
 
 function constrainCrop(crop, layout) {
-	const deriveHeight = () => (
-		crop.height = crop.width / crop.aspectRatio
-	);
+	const deriveHeight = () => (crop.height = crop.width / crop.aspectRatio);
 
-	const deriveWidth = () => (
-		crop.width = crop.height * crop.aspectRatio
-	);
-
+	const deriveWidth = () => (crop.width = crop.height * crop.aspectRatio);
 
 	if (crop.x < 0) {
 		crop.width = crop.width - crop.x;
@@ -155,13 +146,13 @@ const ACTIONS = {
 		const { anchorPoint } = action; //anchor is the se corner
 		const { minSize, maxSize } = getSizingConstraints(
 			crop,
-			{width: anchorPoint[0], height: anchorPoint[1]}	//we can't get wider or taller than the distance from the origin to the anchor point
+			{ width: anchorPoint[0], height: anchorPoint[1] } //we can't get wider or taller than the distance from the origin to the anchor point
 		);
 
 		//if we've moved past the anchor, move the point we're computing from to inline with the anchor to avoid having the crop grow in the other direction
 		const fixedPoint = [
 			Math.min(point[0], anchorPoint[0]),
-			Math.min(point[1], anchorPoint[1])
+			Math.min(point[1], anchorPoint[1]),
 		];
 
 		const relativePoint = getPointRelative(fixedPoint, anchorPoint);
@@ -186,26 +177,23 @@ const ACTIONS = {
 					y: newOrigin[1],
 					width: newSize.width,
 					height: newSize.height,
-					aspectRatio: newSize.width / newSize.height
-				}
-			}
+					aspectRatio: newSize.width / newSize.height,
+				},
+			},
 		});
 	},
 
 	seResize(point, crop, action, formatting, layout, setEditorState) {
 		const { anchorPoint } = action; //anchor is the nw corner
-		const { minSize, maxSize } = getSizingConstraints(
-			crop,
-			{
-				width: layout.image.width - anchorPoint[0], //we can't get any wider than the distance from the anchor point to the right side of the image
-				height: layout.image.height - anchorPoint[1] //we can't get any taller than the distance from the anchor point to the bottom of the image
-			}
-		);
+		const { minSize, maxSize } = getSizingConstraints(crop, {
+			width: layout.image.width - anchorPoint[0], //we can't get any wider than the distance from the anchor point to the right side of the image
+			height: layout.image.height - anchorPoint[1], //we can't get any taller than the distance from the anchor point to the bottom of the image
+		});
 
 		//if we've moved past the anchor, move the point we're computing to be inline with the anchor to avoid having the crop grow in the other direction
 		const fixedPoint = [
 			Math.max(point[0], anchorPoint[0]),
-			Math.max(point[1], anchorPoint[1])
+			Math.max(point[1], anchorPoint[1]),
 		];
 
 		const relativePoint = getPointRelative(fixedPoint, anchorPoint);
@@ -227,26 +215,23 @@ const ACTIONS = {
 					y: newOrigin[1],
 					width: newSize.width,
 					height: newSize.height,
-					aspectRatio: newSize.width / newSize.height
-				}
-			}
+					aspectRatio: newSize.width / newSize.height,
+				},
+			},
 		});
 	},
 
 	neResize(point, crop, action, formatting, layout, setEditorState) {
 		const { anchorPoint } = action; // anchor is the sw corner
-		const { minSize, maxSize } = getSizingConstraints(
-			crop,
-			{
-				width: layout.image.width - anchorPoint[0], // we can't get any wider than the distance from the anchor point to the right side of the image
-				height: anchorPoint[1] // we can't get taller than the distance from the origin to the anchor point
-			}
-		);
+		const { minSize, maxSize } = getSizingConstraints(crop, {
+			width: layout.image.width - anchorPoint[0], // we can't get any wider than the distance from the anchor point to the right side of the image
+			height: anchorPoint[1], // we can't get taller than the distance from the origin to the anchor point
+		});
 
 		//if we've moved past the anchor point, move the point we're computing to be inline with the anchor to avoid having the crop grow in the other direction
 		const fixedPoint = [
 			Math.max(point[0], anchorPoint[0]),
-			Math.min(point[1], anchorPoint[1])
+			Math.min(point[1], anchorPoint[1]),
 		];
 
 		const relativePoint = getPointRelative(fixedPoint, anchorPoint);
@@ -257,10 +242,7 @@ const ACTIONS = {
 			maxSize
 		);
 
-		const newOrigin = [
-			anchorPoint[0],
-			anchorPoint[1] - newSize.height
-		];
+		const newOrigin = [anchorPoint[0], anchorPoint[1] - newSize.height];
 
 		setEditorState({
 			formatting: {
@@ -271,26 +253,23 @@ const ACTIONS = {
 					y: newOrigin[1],
 					width: newSize.width,
 					height: newSize.height,
-					aspectRatio: newSize.width / newSize.height
-				}
-			}
+					aspectRatio: newSize.width / newSize.height,
+				},
+			},
 		});
 	},
 
 	swResize(point, crop, action, formatting, layout, setEditorState) {
 		const { anchorPoint } = action; // anchor is the ne corner
-		const { minSize, maxSize } = getSizingConstraints(
-			crop,
-			{
-				width: anchorPoint[0], // we can't get any wider than the distance from origin to the anchor point
-				height: layout.image.height - anchorPoint[1] // we can't get any taller than the distance from anchor point to the bottom of the image
-			}
-		);
+		const { minSize, maxSize } = getSizingConstraints(crop, {
+			width: anchorPoint[0], // we can't get any wider than the distance from origin to the anchor point
+			height: layout.image.height - anchorPoint[1], // we can't get any taller than the distance from anchor point to the bottom of the image
+		});
 
 		//if we've moved past the anchor point, move the point we're computing to be inline with the anchor to avoid having the crop grow in the other direction
 		const fixedPoint = [
 			Math.min(point[0], anchorPoint[0]),
-			Math.max(point[1], anchorPoint[1])
+			Math.max(point[1], anchorPoint[1]),
 		];
 
 		const relativePoint = getPointRelative(fixedPoint, anchorPoint);
@@ -301,10 +280,7 @@ const ACTIONS = {
 			maxSize
 		);
 
-		const newOrigin = [
-			anchorPoint[0] - newSize.width,
-			anchorPoint[1]
-		];
+		const newOrigin = [anchorPoint[0] - newSize.width, anchorPoint[1]];
 
 		setEditorState({
 			formatting: {
@@ -315,9 +291,9 @@ const ACTIONS = {
 					y: newOrigin[1],
 					width: newSize.width,
 					height: newSize.height,
-					aspectRatio: newSize.width / newSize.height
-				}
-			}
+					aspectRatio: newSize.width / newSize.height,
+				},
+			},
 		});
 	},
 };
@@ -334,7 +310,7 @@ export const handlers = {
 
 		const { minSize, maxSize } = getSizingConstraints(crop, {
 			width: layout.image.width,
-			height: layout.image.height
+			height: layout.image.height,
 		});
 
 		const anchorPoint =
@@ -370,9 +346,14 @@ export const handlers = {
 		};
 	},
 
-	listeners: ['onPointerMove', 'onPointerDown', 'onPointerUp', 'onPointerOut'],
+	listeners: [
+		'onPointerMove',
+		'onPointerDown',
+		'onPointerUp',
+		'onPointerOut',
+	],
 
-	onPointerMove(e, {canvas, padding, formatting, layout, setEditorState}) {
+	onPointerMove(e, { canvas, padding, formatting, layout, setEditorState }) {
 		const { crop } = formatting;
 
 		if (!crop) {
@@ -403,7 +384,7 @@ export const handlers = {
 		}
 	},
 
-	onPointerDown(e, {canvas, padding, formatting, layout, setEditorState}) {
+	onPointerDown(e, { canvas, padding, formatting, layout, setEditorState }) {
 		const { crop } = formatting;
 
 		if (!crop) {
@@ -454,7 +435,7 @@ export const handlers = {
 		}
 	},
 
-	onPointerUp(e, {formatting, layout, setEditorState}) {
+	onPointerUp(e, { formatting, layout, setEditorState }) {
 		const { crop } = formatting;
 
 		if (!crop) {
@@ -474,7 +455,7 @@ export const handlers = {
 		}
 	},
 
-	onPointerOut(e, {formatting, layout, setEditorState}) {
+	onPointerOut(e, { formatting, layout, setEditorState }) {
 		const { crop } = formatting;
 
 		if (!crop) {

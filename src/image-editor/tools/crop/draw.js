@@ -1,4 +1,4 @@
-import { CORNER_RADIUS } from './Constants';
+import { CORNER_RADIUS } from './constants';
 
 export default {
 	after(ctx, formatting, layout, getLayerFor) {

@@ -125,9 +125,8 @@ export default function getCanvasForEditorState(editorStateArg, outputSize) {
 	};
 
 	for (let tool of TOOLS) {
-		if (tool.output && tool.output.fixLayout) {
-			outputLayout = tool.output.fixLayout(formatting, outputLayout);
-		}
+		outputLayout =
+			tool.output?.fixLayout?.(formatting, outputLayout) ?? outputLayout;
 	}
 
 	outputLayout = scaleLayout(outputLayout);
@@ -140,9 +139,7 @@ export default function getCanvasForEditorState(editorStateArg, outputSize) {
 	ctx.lineWidth = 1;
 
 	for (let tool of TOOLS) {
-		if (tool.output && tool.output.before) {
-			tool.output.before(ctx, formatting, outputLayout, canvas);
-		}
+		tool.output?.before?.(ctx, formatting, outputLayout, canvas);
 	}
 
 	ctx.save();
@@ -156,9 +153,7 @@ export default function getCanvasForEditorState(editorStateArg, outputSize) {
 	ctx.restore();
 
 	for (let tool of TOOLS) {
-		if (tool.output && tool.output.after) {
-			tool.output.after(ctx, formatting, outputLayout, canvas);
-		}
+		tool.output?.after?.(ctx, formatting, outputLayout, canvas);
 	}
 
 	return canvas;

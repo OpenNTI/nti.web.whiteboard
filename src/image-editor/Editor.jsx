@@ -137,9 +137,7 @@ export default class ImageEditor extends React.Component {
 
 		//do an drawing before the image
 		for (let tool of TOOLS) {
-			if (tool.draw && tool.draw.before) {
-				tool.draw.before(ctx, formatting, layout, this.getLayerFor);
-			}
+			tool.draw?.before?.(ctx, formatting, layout, this.getLayerFor);
 		}
 
 		ctx.save();
@@ -156,23 +154,17 @@ export default class ImageEditor extends React.Component {
 		ctx.restore();
 
 		for (let tool of TOOLS) {
-			if (tool.draw && tool.draw.after) {
-				tool.draw.after(ctx, formatting, layout, this.getLayerFor);
-			}
+			tool.draw?.after?.(ctx, formatting, layout, this.getLayerFor);
 		}
 
-		if (activeTool && activeTool.draw) {
-			activeTool.draw(ctx, formatting, layout);
-		}
+		activeTool?.draw?.(ctx, formatting, layout);
 	}
 
 	fixFormatting(formatting, layout) {
 		let newFormat = { ...formatting };
 
 		for (let tool of TOOLS) {
-			if (tool.fixFormatting) {
-				newFormat = tool.fixFormatting(newFormat, layout);
-			}
+			newFormat = tool.fixFormatting?.(newFormat, layout) ?? newFormat;
 		}
 
 		return newFormat;
