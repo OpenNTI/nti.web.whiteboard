@@ -1,4 +1,4 @@
-import { CANVAS_PADDING } from '../../Constants';
+import { CANVAS_PADDING } from '../../constants';
 
 export default {
 	applyImageTransform(ctx, formatting, layout) {

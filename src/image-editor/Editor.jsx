@@ -6,7 +6,7 @@ import { getLayoutFor } from './utils';
 import Upload from './Upload';
 import { Crop, Rotate, Blur, Darken } from './tools';
 import Toolbar from './tool-bar';
-import { CANVAS_PADDING } from './Constants';
+import { CANVAS_PADDING } from './constants';
 
 const TOOLS = [Blur, Darken, Crop, Rotate];
 
