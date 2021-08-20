@@ -1,79 +1,88 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React from 'react';
+
+import { useReducerState } from '@nti/web-commons';
 
 import { Editor, getImageForEditorState } from '../index.js';
-
-const formatting = {
-	crop: {
-		width: 70,
-		height: 70,
-		minSize: {
-			height: 70,
-			width: 70,
-		},
-		maxSize: {
-			height: 70,
-			width: 300,
-		},
-	},
-};
 
 export default {
 	title: 'Image Editor',
 	component: Editor,
-	argTypes: {
-		// allowedControls: {
-		//
-		// }
-	},
 };
 
-stylesheet`
-canvas {
-	width: 600px;
-	height: 500px;
-}
+const Column = styled.div`
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
+	justify-content: flex-start;
+	max-width: 100vw;
+	margin: 0 auto;
 `;
 
-export const ImageEditor = props => {
-	const ref = useRef();
-	const [src, setSrc] = useState(null);
-	const onChange = useCallback(editorState => {
-		clearTimeout(ref.current);
-		ref.current = setTimeout(async () => {
+export const ImageEditor = () => {
+	const [{ editorState, src }, dispatch] = useReducerState({
+		editorState: {
+			formatting: {
+				crop: {
+					width: 70,
+					height: 70,
+					minSize: {
+						height: 70,
+						width: 70,
+					},
+					maxSize: {
+						height: 70,
+						width: 300,
+					},
+				},
+			},
+		},
+		src: null,
+	});
+	const onChange = editorState => {
+		dispatch({ editorState, src: null });
+		(async () => {
 			try {
 				const img = getImageForEditorState(editorState);
-				setSrc((await img)?.src);
+				dispatch({ src: (await img)?.src });
 			} catch (e) {
 				// eslint-disable-next-line no-console
 				console.debug(e?.stack || e);
 			}
-		}, 10);
-	}, []);
+		})();
+	};
+
+	// const transform = `scale(${1 / editorState?.layout?.image?.scale || 1})`;
+	const width = Math.round(editorState?.formatting?.crop?.width);
 
 	return (
-		<div>
+		<Column>
+			<h1>Editor</h1>
 			<div>
-				<h1>Editor</h1>
 				<Editor
-					editorState={{ formatting }}
+					editorState={editorState}
 					onChange={onChange}
 					allowedControls={['Blur', 'Darken', 'Crop', 'Rotate']}
-					{...props}
 				/>
 			</div>
-			<div>
-				<h1>Result</h1>
+
+			<h1>Result</h1>
+			<div
+				css={css`
+					display: flex;
+					align-items: center;
+					justify-content: center;
+				`}
+			>
 				{src && (
 					<img
 						src={src}
-						style={{
-							margin: '0 auto',
-							display: 'block',
-							border: '1px solid red',
-						}}
+						width={width}
+						css={css`
+							border: 1px solid red;
+						`}
 					/>
 				)}
 			</div>
-		</div>
+		</Column>
 	);
 };
