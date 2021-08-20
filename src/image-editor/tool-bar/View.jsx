@@ -19,7 +19,7 @@ ImageEditorToolbar.propTypes = {
 	allowedControls: PropTypes.array,
 };
 export default function ImageEditorToolbar({ allowedControls, ...otherProps }) {
-	if (!allowedControls || allowedControls.length === 0) {
+	if (!allowedControls?.length) {
 		return null;
 	}
 
@@ -28,11 +28,9 @@ export default function ImageEditorToolbar({ allowedControls, ...otherProps }) {
 
 	return (
 		<div className={cx('image-editor-tool-bar')}>
-			{controls.map(control => {
-				const Cmp = control;
-
-				return <Cmp key={control.name} {...otherProps} />;
-			})}
+			{controls.map(Control => (
+				<Control key={Control.name} {...otherProps} />
+			))}
 		</div>
 	);
 }
