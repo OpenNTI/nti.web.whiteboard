@@ -2,7 +2,7 @@ import './Editor.scss';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { getLayoutFor } from './utils';
+import { getLayout } from './utils';
 import Upload from './Upload';
 import { Crop, Rotate, Blur, Darken } from './tools';
 import Toolbar from './tool-bar';
@@ -176,7 +176,7 @@ export default class ImageEditor extends React.Component {
 		const { image, formatting } = initialState;
 
 		if (image) {
-			const layout = getLayoutFor(image, this.size, CANVAS_PADDING);
+			const layout = getLayout(image, this.size, CANVAS_PADDING);
 
 			this.setEditorState({
 				image,
@@ -206,7 +206,7 @@ export default class ImageEditor extends React.Component {
 	};
 
 	onImgChange = (image, filename) => {
-		const layout = getLayoutFor(image, this.size, CANVAS_PADDING);
+		const layout = getLayout(image, this.size, CANVAS_PADDING);
 
 		this.setEditorState({
 			image,

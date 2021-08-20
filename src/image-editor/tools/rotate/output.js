@@ -1,4 +1,4 @@
-import { getLayoutFor } from '../../utils';
+import { getLayout } from '../../utils';
 
 const switchImageDimensions = (degrees, image) => {
 	const vertical = degrees === 90 || degrees === 270;
@@ -60,7 +60,7 @@ export default {
 
 		return {
 			...editorState,
-			layout: getLayoutFor(canvas, { width, height }),
+			layout: getLayout(canvas, { width, height }),
 			image: canvas,
 			canvas: {
 				...editorState.canvas,

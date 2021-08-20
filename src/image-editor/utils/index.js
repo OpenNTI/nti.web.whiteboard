@@ -30,7 +30,7 @@ export function getImg(src) {
 	});
 }
 
-export function getLayoutFor(img, size) {
+export function getLayout(img, size) {
 	const imgSize = { height: img.height, width: img.width };
 	const canvasSize = { height: size.height, width: size.width };
 	const scale = img.width / canvasSize.width;
