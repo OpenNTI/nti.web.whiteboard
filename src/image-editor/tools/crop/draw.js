@@ -1,8 +1,10 @@
+import { switchObjectDimensions } from '../../utils';
+
 import { CORNER_RADIUS } from './constants';
 
 export default {
 	after(ctx, formatting, layout, getLayerFor) {
-		const { crop } = formatting || {};
+		const { crop, rotate } = formatting || {};
 
 		if (!crop) {
 			return;
@@ -17,6 +19,11 @@ export default {
 		layer.width = layout.canvas.width;
 		layer.height = layout.canvas.height;
 
+		const imageDimensions = switchObjectDimensions(
+			rotate?.degrees,
+			layout.image
+		);
+
 		layerCtx.setTransform(1, 0, 0, 1, 0, 0);
 		layerCtx.lineWidth = 1;
 
@@ -25,8 +32,8 @@ export default {
 		layerCtx.fillRect(
 			layout.image.x,
 			layout.image.y,
-			layout.image.width,
-			layout.image.height
+			imageDimensions.width,
+			imageDimensions.height
 		);
 		layerCtx.restore();
 

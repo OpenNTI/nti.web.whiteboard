@@ -61,3 +61,12 @@ export function getLayout(img, size) {
 		},
 	};
 }
+
+export function switchObjectDimensions(degrees, object) {
+	const vertical = degrees === 90 || degrees === 270;
+
+	const width = vertical ? object.height : object.width;
+	const height = vertical ? object.width : object.height;
+
+	return { width, height };
+}

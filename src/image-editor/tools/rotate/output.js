@@ -1,13 +1,4 @@
-import { getLayout } from '../../utils';
-
-const switchImageDimensions = (degrees, image) => {
-	const vertical = degrees === 90 || degrees === 270;
-
-	const width = vertical ? image.height : image.width;
-	const height = vertical ? image.width : image.height;
-
-	return { width, height };
-};
+import { getLayout, switchObjectDimensions } from '../../utils';
 
 export default {
 	/**
@@ -33,7 +24,7 @@ export default {
 		ctx.imageSmoothingQuality = 'high';
 		// ctx.imageSmoothingEnabled = false;
 
-		const { width, height } = switchImageDimensions(rotate.degrees, image);
+		const { width, height } = switchObjectDimensions(rotate.degrees, image);
 
 		canvas.width = width;
 		canvas.height = height;
