@@ -17,13 +17,6 @@
     "type": "git",
     "url": "https://github.com/NextThought/nti.web.whiteboard.git"
   },
-  "publishConfig": {
-    "registry": "https://npm.nextthought.com"
-  },
-  "keywords": [
-    "react",
-    "component"
-  ],
   "dependencies": {
     "@nti/lib-commons": "NextThought/nti.lib.commons",
     "@nti/lib-dom": "NextThought/nti.lib.dom",
