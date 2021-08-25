@@ -33,6 +33,7 @@
     "@nti/util-logger": "NextThought/nti.util.logger",
     "@nti/web-client": "NextThought/nti.web.client",
     "@nti/web-commons": "NextThought/nti.web.commons",
+    "@nti/web-core": "NextThought/nti.web.core",
     "invariant": "^2.1.1",
     "stackblur-canvas": "^2.3.0"
   },
