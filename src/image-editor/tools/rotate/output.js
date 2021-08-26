@@ -13,6 +13,7 @@ export default {
 		const {
 			image,
 			formatting: { rotate },
+			layout,
 		} = editorState;
 
 		if (!rotate?.degrees) {
@@ -26,8 +27,8 @@ export default {
 
 		const { width, height } = switchObjectDimensions(rotate.degrees, image);
 
-		canvas.width = width;
-		canvas.height = height;
+		canvas.width = width * layout.image.scale;
+		canvas.height = height * layout.image.scale;
 
 		let cx = width / 2;
 		let cy = height / 2;
