@@ -1,4 +1,4 @@
-import { switchObjectDimensions } from '../../utils';
+import { normalizeRotatedDimensions } from '../../utils';
 
 import { CORNER_RADIUS } from './constants';
 
@@ -19,7 +19,7 @@ export default {
 		layer.width = layout.canvas.width;
 		layer.height = layout.canvas.height;
 
-		const imageDimensions = switchObjectDimensions(
+		const imageDimensions = normalizeRotatedDimensions(
 			rotate?.degrees,
 			layout.image
 		);

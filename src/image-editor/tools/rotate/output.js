@@ -1,4 +1,4 @@
-import { getLayout, switchObjectDimensions } from '../../utils';
+import { getLayout, normalizeRotatedDimensions } from '../../utils';
 
 export default {
 	/**
@@ -25,7 +25,10 @@ export default {
 		ctx.imageSmoothingQuality = 'high';
 		// ctx.imageSmoothingEnabled = false;
 
-		const { width, height } = switchObjectDimensions(rotate.degrees, image);
+		const { width, height } = normalizeRotatedDimensions(
+			rotate.degrees,
+			image
+		);
 
 		canvas.width = width * layout.image.scale;
 		canvas.height = height * layout.image.scale;
