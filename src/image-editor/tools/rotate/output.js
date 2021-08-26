@@ -1,13 +1,4 @@
-import { getLayout } from '../../utils';
-
-const switchImageDimensions = (degrees, image) => {
-	const vertical = degrees === 90 || degrees === 270;
-
-	const width = vertical ? image.height : image.width;
-	const height = vertical ? image.width : image.height;
-
-	return { width, height };
-};
+import { getLayout, normalizeRotatedDimensions } from '../../utils';
 
 export default {
 	/**
@@ -22,6 +13,7 @@ export default {
 		const {
 			image,
 			formatting: { rotate },
+			layout,
 		} = editorState;
 
 		if (!rotate?.degrees) {
@@ -33,10 +25,13 @@ export default {
 		ctx.imageSmoothingQuality = 'high';
 		// ctx.imageSmoothingEnabled = false;
 
-		const { width, height } = switchImageDimensions(rotate.degrees, image);
+		const { width, height } = normalizeRotatedDimensions(
+			rotate.degrees,
+			image
+		);
 
-		canvas.width = width;
-		canvas.height = height;
+		canvas.width = width * layout.image.scale;
+		canvas.height = height * layout.image.scale;
 
 		let cx = width / 2;
 		let cy = height / 2;

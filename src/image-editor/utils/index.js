@@ -61,3 +61,18 @@ export function getLayout(img, size) {
 		},
 	};
 }
+
+/**
+ * @param {number} degrees
+ * @param {{width: number, height: numbert}}  image
+ * @returns {{width: number, height: number}}
+ */
+export function normalizeRotatedDimensions(degrees, image) {
+	// dimensions flip when degrees are an odd increment of 90 (ie: 90, 270, 450, etc)
+	const flip = Math.floor(degrees / 90) % 2;
+	let { width, height } = image;
+	if (flip) {
+		[width, height] = [height, width];
+	}
+	return { width, height };
+}
