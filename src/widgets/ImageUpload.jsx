@@ -3,7 +3,8 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
 
-import { RemoveButton, useReducerState } from '@nti/web-commons';
+import { RemoveButton } from '@nti/web-commons';
+import { useReducerState } from '@nti/web-core';
 import { scoped } from '@nti/lib-locale';
 
 import { ImageEditor } from '../';

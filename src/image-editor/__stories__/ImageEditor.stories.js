@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { useReducerState } from '@nti/web-commons';
+import { useReducerState } from '@nti/web-core';
 
 import { Editor, getImageForEditorState } from '../index.js';
 
