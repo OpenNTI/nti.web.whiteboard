@@ -13,7 +13,6 @@ export default {
 		const {
 			image,
 			formatting: { rotate },
-			layout,
 		} = editorState;
 
 		if (!rotate?.degrees) {
@@ -30,8 +29,8 @@ export default {
 			image
 		);
 
-		canvas.width = width * layout.image.scale;
-		canvas.height = height * layout.image.scale;
+		canvas.width = width;
+		canvas.height = height;
 
 		let cx = width / 2;
 		let cy = height / 2;
