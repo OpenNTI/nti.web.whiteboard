@@ -1,6 +1,9 @@
 .type-button:global(.nti-button) {
 	padding: 1rem 0.5rem 0.25rem;
 	background: none;
+}
+
+.type-button:global(.nti-button) > div {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
