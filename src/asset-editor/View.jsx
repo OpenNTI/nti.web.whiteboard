@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames/bind';
 
 import { getService } from '@nti/web-client';
 import { Loading } from '@nti/web-commons';
+import { useReducerState } from '@nti/web-core';
 
 import Styles from './View.css';
 import {
@@ -42,16 +43,22 @@ export default function AssetEditor({
 	onSave,
 	onCancel,
 }) {
-	const [values, setValues] = React.useState(null);
-	const [current, setCurrent] = React.useState(null);
-	const [saving, setSaving] = React.useState(false);
-	const [savingError, setSavingError] = React.useState(null);
+	const [{ values, current, saving, savingError }, _set] = useReducerState({
+		values: null,
+		current: null,
+		saving: false,
+		savingError: null,
+	});
 
 	const hasUpdated = values && values[current] && values[current].updated;
 
 	const editors = React.Children.toArray(children);
 
-	React.useEffect(() => {
+	let locked = false;
+	useEffect(() => () => (locked = true), []);
+	const set = useCallback(x => !locked && _set(x), []);
+
+	useEffect(() => {
 		async function loadAsset() {
 			const toLoad = asset || defaultAsset;
 			const didChange = () => toLoad !== (asset || defaultAsset);
@@ -80,13 +87,12 @@ export default function AssetEditor({
 					}
 				}
 
-				setValues(initialValues);
-				setCurrent(initialType);
+				set({ values: initialValues, current: initialType });
 			} catch (e) {
 				if (didChange()) {
 					return;
 				}
-				setValues(e);
+				set({ values: e });
 			}
 		}
 
@@ -104,15 +110,15 @@ export default function AssetEditor({
 		const editor = getEditorByID(editors, current);
 		const value = values[current];
 
-		setSaving(true);
+		set({ saving: true });
 
 		try {
 			const payload = await getPayloadForEditor(editor, value);
-
 			await onSave(payload);
 		} catch (err) {
-			setSavingError(err);
-			setSaving(false);
+			set({ savingError: err });
+		} finally {
+			set({ saving: false });
 		}
 	};
 
@@ -126,7 +132,7 @@ export default function AssetEditor({
 					<TypeSwitcher
 						editors={editors}
 						current={current}
-						setCurrent={setCurrent}
+						setCurrent={current => set({ current })}
 					/>
 				</div>
 				<form className={cx('body')} onSubmit={onSubmit}>
@@ -134,9 +140,9 @@ export default function AssetEditor({
 						values={values}
 						current={current}
 						editors={editors}
-						setValues={setValues}
+						setValues={values => set({ values })}
 						savingError={savingError}
-						setSavingError={setSavingError}
+						setSavingError={e => set({ savingError: e })}
 					/>
 					<Controls
 						values={values}
