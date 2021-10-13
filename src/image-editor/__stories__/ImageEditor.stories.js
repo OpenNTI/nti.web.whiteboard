@@ -1,4 +1,3 @@
-import React from 'react';
 
 import { useReducerState } from '@nti/web-core';
 
