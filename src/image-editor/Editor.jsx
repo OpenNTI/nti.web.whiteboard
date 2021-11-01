@@ -216,12 +216,6 @@ export default class ImageEditor extends React.Component {
 		});
 	};
 
-	setActiveControl = activeControl => {
-		this.setState({
-			activeControl,
-		});
-	};
-
 	buildCanvasListener(name) {
 		return e => {
 			e.stopPropagation();

@@ -64,7 +64,7 @@ export function getLayout(img, size) {
 
 /**
  * @param {number} degrees
- * @param {{width: number, height: numbert}}  image
+ * @param {{width: number, height: number}}  image
  * @returns {{width: number, height: number}}
  */
 export function normalizeRotatedDimensions(degrees, image) {
